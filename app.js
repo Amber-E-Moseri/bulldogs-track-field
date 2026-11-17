@@ -70,7 +70,9 @@ function flash(message){document.querySelector('.toast')?.remove();const div=doc
 /* Persist via authenticated Supabase updates; never store published content in browser localStorage. */
 function setDeep(section,key,value){state[section][key]=value;persist();renderSite()}
 function applyImageFallbacks(){document.querySelectorAll('img').forEach(img=>{if(img.dataset.imageFallbackSet)return;img.dataset.imageFallbackSet='1';const container=img.closest('.hero-photo,.about-image,.program-photo,.gallery-tile,.admin-preview,.media-edit');img.addEventListener('error',()=>{img.classList.add('missing-real-photo');container?.classList.add('photo-not-loaded')});img.addEventListener('load',()=>{img.classList.remove('missing-real-photo');if(container&&!container.querySelector('img.missing-real-photo'))container.classList.remove('photo-not-loaded')});})}
-function priceLabel(p){const amount=String(p.price||'').trim();return amount?'
+function priceLabel(p){const amount=String(p.price||'').trim();return amount?'$'+amount+' / '+(p.feeUnit||'season'):'$';}
+function renderPricing(){const grid=$('#pricing-grid');if(!grid)return;grid.innerHTML=state.programs.map(p=>`<article class="pricing-item"><h4>${esc(p.title.replace(/\\n/g,' '))}</h4><strong>${esc(priceLabel(p))}</strong><small>${p.price?'Starting fee; confirm what is included.':'Price to be set by the coach'}</small></article>`).join('');}
+function renderSite(){
  $('#hero-headline').innerHTML=htmlTitle(state.hero.headline);$('#hero-description').textContent=state.hero.description;
  $('#about-heading').innerHTML=htmlTitle(state.about.heading);$('#about-text').textContent=state.about.text;$('#coach-quote').textContent='“'+state.about.quote+'”';
  $$('.brand span').forEach(el=>{el.innerHTML=esc(state.brand.name)+'<small>'+esc(state.brand.sub)+'</small>'});
