@@ -102,3 +102,5 @@ test('Join form collects program, age group, and guardian details without persis
 });
 
 test('coach can edit prices without invented initial amounts',()=>{assert.match(html,/id="pricing-grid"/);assert.match(app,/function priceLabel/);assert.match(app,/data-program-field="price"/);assert.match(app,/data-program-field="feeUnit"/);assert.match(app,/return amount\?'\$'/);});
+
+test('FAQ editor is integrated into authenticated content workflow',()=>{assert.match(html,/id="faq-grid"/);assert.match(html,/data-tab="faq"/);assert.match(app,/clean\.faq=Array\.isArray\(content\.faq\)/);assert.match(app,/function faqRow/);assert.match(app,/data-faq-field="question"/);assert.match(app,/data-faq-field="answer"/);assert.match(app,/data-delete-faq/);assert.match(app,/id==='add-faq'/);assert.match(app,/faqGrid\.innerHTML/);assert.ok(initial.faq.length>=8);});
