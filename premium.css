@@ -221,3 +221,17 @@
  #public-site .contact #instagram-link{padding:13px 0}
  #public-site .contact form{margin:0}
 }
+
+/* Gallery: always retain a genuine horizontal swipe track when 3 photos remain.
+   At most two cards are visible; both swipe and previous/next can advance. */
+#public-site .gallery-grid{display:flex!important;gap:16px!important;overflow-x:auto!important;scroll-snap-type:x mandatory;scroll-padding-inline:0;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;padding-bottom:13px}
+#public-site .gallery-grid .gallery-tile{flex:0 0 calc(56% - 8px);width:calc(56% - 8px);max-width:none;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
+#public-site .gallery-nav button:disabled{opacity:.32;cursor:not-allowed}
+#public-site .gallery-empty{font-size:14px;color:#706477;line-height:1.6;padding:16px 0}
+#public-site .faq-section{display:block;position:relative;min-height:210px}
+#public-site .faq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#public-site .faq-grid details{min-width:0}
+@media(max-width:760px){
+ #public-site .gallery-grid .gallery-tile{flex:0 0 86%;width:86%;max-width:none;min-height:285px}
+ #public-site .faq-grid{grid-template-columns:1fr}
+}
