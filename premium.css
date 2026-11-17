@@ -66,7 +66,7 @@
 #public-site .pricing-panel{margin:20px 0 0;padding:22px;border-radius:8px}
 #public-site .parent-details{margin-top:15px;border-radius:8px;gap:24px}
 #public-site .manifesto{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 74% 30%,#563063,#271530 68%);padding:80px 5.3% 42px}
-#public-site .manifesto::before{content:"";position:absolute;z-index:-1;inset:0;background-image:var(--bulldogs-crest,url('assets/logo.webp'));background-size:min(37vw,400px);background-position:86% 45%;background-repeat:no-repeat;opacity:.10;filter:grayscale(1)}
+#public-site .manifesto::before{content:"";position:absolute;z-index:-1;inset:0;background-image:var(--bulldogs-crest,url('assets/logo-transparent.webp'));background-size:min(37vw,400px);background-position:86% 45%;background-repeat:no-repeat;opacity:.10;filter:grayscale(1)}
 #public-site .manifesto p:first-of-type{font-size:clamp(68px,9.3vw,132px);margin:25px 0}
 #public-site .manifesto .manifesto-motto{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:400;font-size:clamp(26px,3vw,42px);margin-bottom:46px;line-height:1.25}
 #public-site .gallery-grid .gallery-tile{flex:0 0 min(48%,420px);max-width:420px;min-height:350px;transition:transform .35s ease,box-shadow .35s ease;overflow:hidden}
