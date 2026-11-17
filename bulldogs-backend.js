@@ -4,35 +4,7 @@
 const url='https://cdbeadjwwmakpsmtyguy.supabase.co';
 const key='sb_publishable_VMFCvANItK4nwdNE__4fFw_Fq6VPJu-';
 const sdk=window.supabase;
-if(!sdk?.createClient){async function submitInquiry(input){
- const name=String(input?.name||'').trim();
- const email=String(input?.email||'').trim();
- const event=String(input?.event||'').trim();
- const message=String(input?.message||'').trim();
- if(name.length<1||name.length>100)throw Error('Please enter your name (up to 100 characters).');
- if(email.length<3||email.length>180||!/^\\S+@\\S+\\.\\S+$/.test(email))throw Error('Please enter a valid email address.');
- if(event.length>120)throw Error('Event name is too long.');
- if(message.length<1||message.length>2500)throw Error('Please include your training goals (up to 2500 characters).');
- // Public write-only insert: no SELECT/RETURNING and no admin session required.
- const {error}=await client.from('bulldogs_inquiries').insert({name,email,event:event||null,message});
- if(error)throw error;
- return true;
-}
-async function listInquiries(){
- if(!(await currentAdmin()))throw Error('Only Bulldogs admins may read inquiries.');
- const {data,error}=await client.from('bulldogs_inquiries')
-  .select('id,name,email,event,message,created_at')
-  .order('created_at',{ascending:false}).limit(200);
- if(error)throw error;return data||[];
-}
-async function deleteInquiry(id){
- if(!(await currentAdmin()))throw Error('Only Bulldogs admins may remove inquiries.');
- if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(String(id)))throw Error('Invalid inquiry.');
- const {error}=await client.from('bulldogs_inquiries').delete().eq('id',id);
- if(error)throw error;
- return true;
-}
-window.BulldogsAPI={error:'Supabase library could not load'};return;}
+if(!sdk?.createClient){window.BulldogsAPI={error:'Supabase library could not load'};return;}
 const client=sdk.createClient(url,key,{auth:{storageKey:'bulldogs-auth-v1',autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
 const unwrap=({data,error})=>{if(error)throw error;return data};
 async function session(){return unwrap(await client.auth.getSession()).session}
@@ -58,6 +30,33 @@ async function uploadPhoto(blob){
  const {error}=await client.storage.from('bulldogs-media').upload(file,blob,{contentType:'image/webp',upsert:false,cacheControl:'3600'});
  if(error)throw error;
  return client.storage.from('bulldogs-media').getPublicUrl(file).data.publicUrl;
+}
+async function submitInquiry(input){
+ const name=String(input?.name||'').trim();
+ const email=String(input?.email||'').trim();
+ const event=String(input?.event||'').trim();
+ const message=String(input?.message||'').trim();
+ if(name.length<1||name.length>100)throw Error('Please enter your name (up to 100 characters).');
+ if(email.length<3||email.length>180||!/^\\S+@\\S+\\.\\S+$/.test(email))throw Error('Please enter a valid email address.');
+ if(event.length>120)throw Error('Event name is too long.');
+ if(message.length<1||message.length>2500)throw Error('Please include your training goals (up to 2500 characters).');
+ // Public insert with no SELECT or RETURNING. RLS prevents reading inquiries.
+ const {error}=await client.from('bulldogs_inquiries').insert({name,email,event:event||null,message});
+ if(error)throw error;
+ return true;
+}
+async function listInquiries(){
+ if(!(await currentAdmin()))throw Error('Only Bulldogs admins may read inquiries.');
+ const {data,error}=await client.from('bulldogs_inquiries')
+  .select('id,name,email,event,message,created_at')
+  .order('created_at',{ascending:false}).limit(200);
+ if(error)throw error;return data||[];
+}
+async function deleteInquiry(id){
+ if(!(await currentAdmin()))throw Error('Only Bulldogs admins may remove inquiries.');
+ if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(String(id)))throw Error('Invalid inquiry.');
+ const {error}=await client.from('bulldogs_inquiries').delete().eq('id',id);
+ if(error)throw error;return true;
 }
 window.BulldogsAPI={
  client,session,currentAdmin,getContent,saveContent,uploadPhoto,submitInquiry,listInquiries,deleteInquiry,
