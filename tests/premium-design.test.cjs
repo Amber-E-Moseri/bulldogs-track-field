@@ -63,3 +63,18 @@ test('multi-card gallery navigation is based on actual tile positions',()=>{
  assert.match(app,/tiles\[galleryIndex\]\.offsetLeft-tiles\[0\]\.offsetLeft/);
  assert.match(css,/flex:0 0 min\(48%,420px\)/);
 });
+
+test('fallback and premium styles prevent the broken green program-card rendering',()=>{
+ const fallback=fs.readFileSync(path.join(root,'style.css'),'utf8');
+ assert.match(fallback,/#public-site \.program-card:first-child\{background:#2b1936/);
+ assert.match(css,/#public-site \.program-card:first-child\{background:linear-gradient\(155deg,#3b2148/);
+ assert.match(fallback,/#public-site \.program-card \.program-facts,#public-site \.program-card \.program-price\{display:none!important\}/);
+ assert.match(css,/#public-site \.program-card \.training-groups ul\{display:flex!important/);
+ assert.match(css,/#public-site \.program-card \.program-ask\{display:inline-flex/);
+ assert.match(css,/#public-site \.program-card:first-child \.program-ask\{background:#74d799!important/);
+});
+test('all four photographic placements receive uniform plum shading',()=>{
+ for(const name of ['program-photo','gallery-tile','about-image','hero-photo'])assert.match(css,new RegExp('#public-site \\.'+name));
+ assert.match(css,/filter:saturate\(\.78\) contrast\(1\.07\)/);
+ assert.match(css,/linear-gradient\(135deg,rgba\(72,35,92,\.27\)/);
+});
