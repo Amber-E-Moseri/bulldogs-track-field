@@ -86,7 +86,7 @@ function renderSite(){
  $('#hero-headline').innerHTML=htmlTitle(state.hero.headline);$('#hero-description').textContent=state.hero.description;
  $('#about-heading').innerHTML=htmlTitle(state.about.heading);$('#about-text').textContent=state.about.text;$('#coach-quote').textContent='“'+state.about.quote+'”';
  $$('.brand span').forEach(el=>{el.innerHTML=esc(state.brand.name)+'<small>'+esc(state.brand.sub)+'</small>'});
- $('[data-media]').forEach(el=>{const key=el.dataset.media;el.src=key==='logo'?state.brand.logo:state.media[key]});
+ $$('[data-media]').forEach(el=>{const key=el.dataset.media;el.src=key==='logo'?state.brand.logo:state.media[key]});
  const crest=String(state.brand.logo||'');
  if(/^(https:\/\/[^"'\\<>]+|assets\/[A-Za-z0-9._/-]+)$/.test(crest)){
   $('#public-site').style.setProperty('--bulldogs-crest','url("'+crest+'")');
