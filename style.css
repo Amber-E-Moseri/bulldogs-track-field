@@ -47,3 +47,28 @@
 .admin-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 #save-state{font-size:12px;color:#6c6075}
 @media(max-width:650px){.auth-card{padding:24px}.admin-actions{justify-content:flex-start}}
+
+/* Authentic imagery framing and subtle hero tint */
+.hero-photo:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(115deg,rgba(36,21,51,.24),rgba(44,77,65,.09) 55%,rgba(23,17,36,.14))}
+.hero-photo .photo-stamp,.hero-photo .vertical-text{z-index:2}
+.about-image{background:var(--cream)}
+.about-image>img{object-fit:contain!important;object-position:center center;background:var(--cream);display:block}
+.program-card:first-child .program-photo{height:212px;background:#eaece4}
+.program-card:first-child .program-photo img{object-fit:contain!important;object-position:center center}
+.program-card .program-photo{height:195px}
+/* Real image transparency is preferable; this visually blends the white logo card into light navigation surfaces. */
+.nav .brand img{mix-blend-mode:multiply}
+.contact-honey{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
+#send-inquiry[disabled]{opacity:.65;cursor:wait}
+.gallery-controls{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:4px 0 20px;font-size:10px;letter-spacing:1.2px;font-weight:800}
+.gallery-nav{display:flex;align-items:center;gap:14px}
+.gallery-nav button{width:42px;height:42px;border:1px solid #d0c6d0;border-radius:50%;background:transparent;color:inherit;cursor:pointer;font-size:22px}
+.gallery-nav button:disabled{opacity:.35;cursor:not-allowed}
+.gallery-grid{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:0!important;touch-action:pan-x pan-y;overscroll-behavior-inline:contain}
+.gallery-grid::-webkit-scrollbar{display:none}
+.gallery-tile{display:block!important;flex:0 0 100%;width:100%;scroll-snap-align:start;aspect-ratio:16/9;min-height:300px;cursor:zoom-in}
+.gallery-tile img{width:100%;height:100%!important;max-height:570px;object-fit:contain!important;background:#30263a}
+.gallery-tile .caption{pointer-events:none}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+section[id]{scroll-margin-top:90px}
+@media(max-width:760px){.gallery-tile{aspect-ratio:4/5;min-height:240px}.about-image>img{height:auto;max-height:530px}.gallery-controls>span{font-size:9px}}
