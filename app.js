@@ -71,7 +71,17 @@ function flash(message){document.querySelector('.toast')?.remove();const div=doc
 function setDeep(section,key,value){state[section][key]=value;persist();renderSite()}
 function applyImageFallbacks(){document.querySelectorAll('img').forEach(img=>{if(img.dataset.imageFallbackSet)return;img.dataset.imageFallbackSet='1';const container=img.closest('.hero-photo,.about-image,.program-photo,.gallery-tile,.admin-preview,.media-edit');img.addEventListener('error',()=>{img.classList.add('missing-real-photo');container?.classList.add('photo-not-loaded')});img.addEventListener('load',()=>{img.classList.remove('missing-real-photo');if(container&&!container.querySelector('img.missing-real-photo'))container.classList.remove('photo-not-loaded')});})}
 function priceLabel(p){const amount=String(p.price||'').trim();return amount?'$'+amount+' / '+(p.feeUnit||'season'):'$';}
-function renderPricing(){const grid=$('#pricing-grid');if(!grid)return;grid.innerHTML=state.programs.map(p=>`<article class="pricing-item"><h4>${esc(p.title.replace(/\\n/g,' '))}</h4><strong>${esc(priceLabel(p))}</strong><small>${p.price?'Starting fee; confirm what is included.':'Price to be set by the coach'}</small></article>`).join('');}
+function renderPricing(){
+ const grid=$('#pricing-grid');if(!grid)return;
+ const prices=state.programs.filter(p=>p.price!==undefined&&p.price!==null&&String(p.price).trim()!==''&&Number.isFinite(Number(p.price)));
+ const wrapper=grid.closest('.pricing-panel');
+ if(wrapper)wrapper.hidden=prices.length===0;
+ grid.innerHTML=prices.map(p=>`<article class="pricing-item"><h4>${esc(p.title.replace(/\\n/g,' '))}</h4><strong>${esc(priceLabel(p))}</strong><small>Starting fee · confirm what's included with Sean</small></article>`).join('');
+}
+function publicGalleryItems(){
+ const featured=new Set([state.media.hero,state.media.studio,...state.programs.slice(1).map(p=>p.image)].filter(Boolean));
+ return state.gallery.map((item,originalIndex)=>({...item,originalIndex})).filter(item=>!featured.has(item.image));
+}
 function renderSite(){
  $('#hero-headline').innerHTML=htmlTitle(state.hero.headline);$('#hero-description').textContent=state.hero.description;
  $('#about-heading').innerHTML=htmlTitle(state.about.heading);$('#about-text').textContent=state.about.text;$('#coach-quote').textContent='“'+state.about.quote+'”';
@@ -79,13 +89,15 @@ function renderSite(){
  $$('[data-media]').forEach(el=>{const key=el.dataset.media;el.src=key==='logo'?state.brand.logo:state.media[key]});
  $('#instagram-link').href=/^https:\/\//.test(state.brand.instagram)?state.brand.instagram:'https://www.instagram.com/bulldogs.trackandfield/';
  $('#stat-row').innerHTML=state.stats.map(s=>`<div><strong>${esc(s.value)}</strong><span>${nl(s.label)}</span></div>`).join('');
- $('#program-grid').innerHTML=state.programs.map((p,i)=>`<article class="program-card"><span class="number">0${i+1} / TRAINING</span><span class="program-type ${p.type==='Non-competitive'?'noncompetitive':''}">${esc(p.type||'Competitive')}</span><h3>${nl(p.title)}</h3><div class="program-photo"><img loading="lazy" src="${esc(p.image||'')}" alt="${esc(p.title.replace(/\n/g,' '))} training photograph"></div><p>${esc(p.description)}</p><div class="training-groups"><strong>TRAINING GROUPS</strong><ul>${(Array.isArray(p.groups)?p.groups:[]).map(group=>`<li>${esc(group)}</li>`).join('')}</ul></div><div class="program-facts"><span><b>When:</b> ${esc(p.schedule||'To be confirmed')}</span><span><b>Where:</b> ${esc(p.venue||'Medicine Hat · venue to be confirmed')}</span><span><b>Season:</b> ${esc(p.season||'To be confirmed')}</span><span><b>Next start:</b> ${esc(p.nextStart||'To be confirmed')}</span></div><div class="program-price">${esc(priceLabel(p))}</div><button class="program-ask" type="button" data-ask-program="${esc(p.title.replace(/\n/g,' '))}">ASK ABOUT THIS PROGRAM</button><div class="card-bottom"><span>${esc(p.subtitle||'ATHLETE DEVELOPMENT')}</span></div></article>`).join('');
+ $('#program-grid').innerHTML=state.programs.map((p,i)=>`<article class="program-card"><span class="number">${String(i+1).padStart(2,'0')} / ${i===0?'DISTANCE':'TRAINING'}</span><span class="program-type ${p.type==='Non-competitive'?'noncompetitive':''}">${esc(p.type||'Competitive')}</span><h3>${nl(p.title)}</h3>${i===0?'':`<div class="program-photo"><img loading="lazy" src="${esc(p.image||'')}" alt="${esc(p.title.replace(/\\n/g,' '))} training photograph"></div>`}<p>${esc(p.description)}</p><div class="training-groups"><strong>TRAINING GROUPS</strong><ul>${(Array.isArray(p.groups)?p.groups:[]).map(group=>`<li>${esc(group)}</li>`).join('')}</ul></div><button class="program-ask" type="button" data-ask-program="${esc(p.title.replace(/\\n/g,' '))}">Ask about this program</button><div class="card-bottom"><span>${esc(p.subtitle||'ATHLETE DEVELOPMENT')}</span></div></article>`).join('');
  renderPricing();
  const faqGrid=$('#faq-grid');if(faqGrid)faqGrid.innerHTML=(Array.isArray(state.faq)?state.faq:[]).filter(item=>item&&String(item.question||'').trim()).map(item=>`<details><summary>${esc(item.question)}</summary><p>${esc(item.answer||'')}</p></details>`).join('');
- $('#gallery-grid').innerHTML=state.gallery.map((g,i)=>`<button class="gallery-tile" data-lightbox="${i}" aria-label="View ${esc(g.caption)}" tabindex="${i===galleryIndex?'0':'-1'}"><img loading="lazy" src="${esc(g.image)}" alt="${esc(g.caption)}"><span class="caption">${String(i+1).padStart(2,'0')} / ${esc(g.caption)}</span></button>`).join('');
- const count=state.gallery.length;galleryIndex=Math.min(galleryIndex,Math.max(0,count-1));
+ const galleryItems=publicGalleryItems();
+ $('#gallery-grid').innerHTML=galleryItems.map((g,i)=>`<button class="gallery-tile" data-lightbox="${g.originalIndex}" aria-label="View ${esc(g.caption)}" tabindex="${i===galleryIndex?'0':'-1'}"><img loading="lazy" src="${esc(g.image)}" alt="${esc(g.caption)}"><span class="caption">${String(i+1).padStart(2,'0')} / ${esc(g.caption)}</span></button>`).join('');
+ const count=galleryItems.length;galleryIndex=Math.min(galleryIndex,Math.max(0,count-1));
  $('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=count===0||galleryIndex===count-1;$('#gallery-position').textContent=count?`${galleryIndex+1} / ${count}`:'0 / 0';
- $('#gallery-grid').scrollTo({left:galleryIndex*$('#gallery-grid').clientWidth,behavior:'auto'});
+ const galleryStrip=$('#gallery-grid'),galleryTiles=galleryStrip.querySelectorAll('.gallery-tile');
+ if(galleryTiles.length)galleryStrip.scrollTo({left:galleryTiles[galleryIndex].offsetLeft-galleryTiles[0].offsetLeft,behavior:'auto'});
  applyImageFallbacks();
 }
 function textField(label,section,key,rows=0){const value=state[section][key];const control=rows?`<textarea data-section="${section}" data-field="${key}">${esc(value)}</textarea>`:`<input data-section="${section}" data-field="${key}" value="${esc(value)}">`;return `<label class="field">${label}${control}</label>`}
@@ -126,7 +138,7 @@ function switchView(){
  }
 }
 function download(name,content,mime='application/json'){const url=URL.createObjectURL(new Blob([content],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
-function loadImage(file,callback){if(!file?.type.startsWith('image/')){flash('Please choose an image.');return}if(file.size>15*1024*1024){flash('Image is too large (15 MB maximum).');return}const reader=new FileReader();reader.onerror=()=>flash('Could not read photo');reader.onload=()=>{const img=new Image();img.onerror=()=>flash('Could not load the image');img.onload=()=>{const canvas=document.createElement('canvas');const scale=Math.min(1,1300/Math.max(img.width,img.height));canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);callback(canvas.toDataURL('image/jpeg',.76))};img.src=reader.result};reader.readAsDataURL(file)}
+function loadImage(file,callback){if(!file?.type.startsWith('image/')){flash('Please choose an image.');return}if(file.size>15*1024*1024){flash('Image is too large (15 MB maximum).');return}const reader=new FileReader();reader.onerror=()=>flash('Could not read photo');reader.onload=()=>{const img=new Image();img.onerror=()=>flash('Could not load the image');img.onload=()=>{const canvas=document.createElement('canvas');const scale=Math.min(1,1300/Math.max(img.width,img.height));canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);callback(canvas.toDataURL('image/webp',.82))};img.src=reader.result};reader.readAsDataURL(file)}
 function setMedia(key,value){const old=key==='logo'?state.brand.logo:state.media[key];if(key==='logo')state.brand.logo=value;else state.media[key]=value;if(!persist()){if(key==='logo')state.brand.logo=old;else state.media[key]=old;return}renderSite();adminRender();flash('Photo uploaded. Publishing...')}
 function safeImport(s){return s&&typeof s==='object'&&s.brand&&typeof s.brand.name==='string'&&s.hero&&typeof s.hero.headline==='string'&&s.about&&Array.isArray(s.programs)&&Array.isArray(s.gallery)&&Array.isArray(s.inquiries)&&s.media}
 async function manageClick(e){const t=e.target.closest('button');if(!t)return;
@@ -150,7 +162,13 @@ $('#program-grid').addEventListener('click',e=>{const button=e.target.closest('[
 $('#admin-app').addEventListener('click',manageClick);
 $('#admin-app').addEventListener('input',e=>{const t=e.target;if(t.dataset.section&&t.dataset.field){setDeep(t.dataset.section,t.dataset.field,t.value)}if(t.dataset.stat!==undefined){state.stats[+t.dataset.stat][t.dataset.part]=t.value;persist();renderSite()}if(t.dataset.programId){const p=state.programs.find(p=>p.id===t.dataset.programId);if(p){p[t.dataset.programField]=t.dataset.programField==='groups'?t.value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean):t.value;persist();renderSite()}}if(t.dataset.faqId){const q=(state.faq||[]).find(q=>q.id===t.dataset.faqId);if(q&&['question','answer'].includes(t.dataset.faqField)){q[t.dataset.faqField]=t.value;persist();renderSite()}}if(t.dataset.galleryId){const g=state.gallery.find(g=>g.id===t.dataset.galleryId);if(g){g[t.dataset.galleryField]=t.value;persist();renderSite()}}});
 $('#admin-app').addEventListener('change',e=>{const t=e.target;if(t.dataset.upload){saveUploadedPhoto(t.files?.[0],v=>setMedia(t.dataset.upload,v))}if(t.dataset.programUpload){const id=t.dataset.programUpload;saveUploadedPhoto(t.files?.[0],v=>{const p=state.programs.find(p=>p.id===id);if(!p)return;const old=p.image;p.image=v;if(!persist()){p.image=old;return}renderSite();adminRender();flash('Program photo uploaded. Publishing...')})}if(t.dataset.galleryUpload){const id=t.dataset.galleryUpload;saveUploadedPhoto(t.files?.[0],v=>{const g=state.gallery.find(g=>g.id===id);if(!g)return;const old=g.image;g.image=v;if(!persist()){g.image=old;return}renderSite();adminRender();flash('Gallery image uploaded. Publishing...')})}if(t.dataset.programField==='type'){const p=state.programs.find(p=>p.id===t.dataset.programId);if(p){p.type=t.value;persist();renderSite();adminRender()}}if(t.id==='import-json'){const f=t.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const obj=JSON.parse(r.result);if(!safeImport(obj))throw new Error('Invalid format');if(!confirm('Replace your current local content with this backup?'))return;const old=state;state=obj;if(!persist()){state=old;return}renderSite();adminRender();flash('Backup imported')}catch{flash('This is not a valid Bulldogs backup file')}};r.readAsText(f)}});
-$('#athlete-minor').addEventListener('change',e=>{const required=e.target.checked;const fields=$('#guardian-fields');fields.hidden=!required;fields.querySelectorAll('input').forEach(input=>input.required=required)});
+function updateGuardianFields(){
+ const required=$('#athlete-minor').checked,fields=$('#guardian-fields');
+ fields.hidden=!required;
+ fields.querySelectorAll('input').forEach(input=>{input.required=required;input.disabled=!required});
+}
+$('#athlete-minor').addEventListener('change',updateGuardianFields);
+updateGuardianFields();
 $('#contact-form').addEventListener('submit',async e=>{
  e.preventDefault();if(formSubmitting)return;
  const form=e.currentTarget, data=new FormData(form), note=$('#form-status'), button=$('#send-inquiry');
@@ -167,22 +185,24 @@ $('#contact-form').addEventListener('submit',async e=>{
  const shownPrice=priceLabel(selected||{});
  const payload={name:String(data.get('name')||'').trim(),email:String(data.get('email')||'').trim(),event:program+' / '+ageGroup,message:'Program: '+program+'\\nGroup: '+ageGroup+'\\nInterest: '+intent+'\\nSource: '+source+'\\nUnder 18: '+(under18?'Yes':'No')+guardianDetails+'\\nGoals: '+String(data.get('message')||'').trim()+'\\nDisplayed price: '+shownPrice};
  formSubmitting=true;button.disabled=true;note.textContent='Sending your message...';
- try{await requireBackend().submitInquiry(payload);form.reset();note.textContent='Request received. The program currently shows '+shownPrice+'. Sean will confirm final fees, schedule and availability when replying.';flash('Inquiry submitted successfully')}
+ try{await requireBackend().submitInquiry(payload);form.reset();updateGuardianFields();note.textContent='Request received. The program currently shows '+shownPrice+'. Sean will confirm final fees, schedule and availability when replying.';flash('Inquiry submitted successfully')}
  catch(error){note.textContent='Could not send your message: '+(error.message||'Please retry.');flash('Unable to submit inquiry')}
  finally{formSubmitting=false;button.disabled=false}
 });
 function setGalleryIndex(next){
- galleryIndex=Math.max(0,Math.min(next,state.gallery.length-1));
- const strip=$('#gallery-grid');strip.scrollTo({left:galleryIndex*strip.clientWidth,behavior:'smooth'});
- $('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=galleryIndex>=state.gallery.length-1;
- $('#gallery-position').textContent=state.gallery.length?`${galleryIndex+1} / ${state.gallery.length}`:'0 / 0';
+ const count=publicGalleryItems().length;
+ galleryIndex=Math.max(0,Math.min(next,count-1));
+ const strip=$('#gallery-grid'),tiles=strip.querySelectorAll('.gallery-tile');
+ if(tiles.length)strip.scrollTo({left:tiles[galleryIndex].offsetLeft-tiles[0].offsetLeft,behavior:'smooth'});
+ $('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=galleryIndex>=count-1;
+ $('#gallery-position').textContent=count?`${galleryIndex+1} / ${count}`:'0 / 0';
 }
 $('#gallery-prev').addEventListener('click',()=>setGalleryIndex(galleryIndex-1));
 $('#gallery-next').addEventListener('click',()=>setGalleryIndex(galleryIndex+1));
 $('#gallery-grid').addEventListener('scroll',()=>{
- const w=$('#gallery-grid').clientWidth;if(!w)return;
- const next=Math.round($('#gallery-grid').scrollLeft/w);
- if(next!==galleryIndex){galleryIndex=next;$('#gallery-position').textContent=`${galleryIndex+1} / ${state.gallery.length}`;$('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=galleryIndex>=state.gallery.length-1}
+ const strip=$('#gallery-grid'),tiles=Array.from(strip.querySelectorAll('.gallery-tile'));if(!tiles.length)return;
+ const next=tiles.reduce((best,tile,index)=>Math.abs(tile.offsetLeft-tiles[0].offsetLeft-strip.scrollLeft)<Math.abs(tiles[best].offsetLeft-tiles[0].offsetLeft-strip.scrollLeft)?index:best,0);
+ if(next!==galleryIndex){const count=publicGalleryItems().length;galleryIndex=Math.min(next,Math.max(0,count-1));$('#gallery-position').textContent=count?`${galleryIndex+1} / ${count}`:'0 / 0';$('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=galleryIndex>=count-1}
 },{passive:true});
 $('#gallery-grid').addEventListener('click',e=>{const el=e.target.closest('[data-lightbox]');if(!el)return;const g=state.gallery[+el.dataset.lightbox];if(!g)return;$('#lightbox-img').src=g.image;$('#lightbox-img').alt=g.caption;$('#lightbox').hidden=false;$('#close-lightbox').focus()});
 function closeLightbox(){$('#lightbox').hidden=true;$('#lightbox-img').removeAttribute('src')}$('#close-lightbox').addEventListener('click',closeLightbox);$('#lightbox').addEventListener('click',e=>{if(e.target===$('#lightbox'))closeLightbox()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
@@ -195,5 +215,16 @@ $('#admin-login-form').addEventListener('submit',async e=>{
 });
 $('#admin-logout').addEventListener('click',async()=>{await api.logout();adminAuthorized=false;switchView();});
 window.addEventListener('hashchange',switchView);
-renderSite();switchView();loadSiteContent();
+function initPremiumMotion(){
+ const nav=$('#public-site .nav');
+ const syncNav=()=>nav?.classList.toggle('is-scrolled',window.scrollY>42);
+ window.addEventListener('scroll',syncNav,{passive:true});syncNav();
+ if(!('IntersectionObserver' in window))return;
+ const reveal=Array.from(document.querySelectorAll('#public-site .section, #public-site .manifesto, #public-site .stats'));
+ const observer=new IntersectionObserver(entries=>{
+  for(const entry of entries){if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}
+ },{threshold:.08,rootMargin:'0px 0px 50px 0px'});
+ reveal.forEach(el=>{el.classList.add('scroll-reveal');observer.observe(el)});
+}
+renderSite();switchView();loadSiteContent();initPremiumMotion();
 })();
