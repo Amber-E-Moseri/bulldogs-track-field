@@ -115,7 +115,7 @@ test('section three is a carousel with controls and touch scrolling',()=>{
 });
 
 test('navigation anchors scroll to sections, and coach/cross-country images avoid cropping',()=>{
- assert.match(html,/href="#contact">WORK WITH SEAN/);
+ assert.match(html,/href="#join-team">WORK WITH SEAN/);
  assert.match(app,/scrollIntoView\(\{behavior:'smooth',block:'start'\}\)/);
  assert.match(css,/\.about-image>img\{object-fit:contain!important/);
  assert.match(css,/\.program-card:first-child \.program-photo img\{object-fit:contain!important/);

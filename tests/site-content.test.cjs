@@ -89,3 +89,14 @@ test('Supabase admin wiring is enabled and browser-only writes are removed', () 
  assert.match(backend,/currentAdmin\(\)/);
  assert.doesNotMatch(backend,/service_role|sb_secret_/);
 });
+
+test('Join form collects program, age group, and guardian details without persisting them in localStorage',()=>{
+ assert.match(html,/id="join-team"/);
+ for(const name of ['program','age_group','under18','guardian_name','guardian_email'])assert.match(html,new RegExp('name="'+name+'"'));
+ assert.match(html,/privacy-note/);
+ assert.match(app,/guardianDetails/);
+ assert.match(app,/submitInquiry\(payload\)/);
+ assert.match(html,/mailto:medicinehatbulldogstrackclub@gmail\.com/);
+ assert.match(html,/href="#join-team">TRAIN WITH US/);
+ assert.match(html,/href="#join-team">START YOUR JOURNEY/);
+});
