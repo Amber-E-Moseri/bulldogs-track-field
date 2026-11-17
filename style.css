@@ -144,3 +144,9 @@ section[id]{scroll-margin-top:90px}
  background:transparent!important;box-shadow:none!important;border:0!important;
  border-radius:0!important;padding:0!important;mix-blend-mode:normal!important;
 }
+
+/* Parent-facing details and join form */
+.coach-sources{font-size:12px!important;margin:-10px 0 24px;color:#6a5971}.coach-sources a{text-decoration:underline}
+.parent-details{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding:28px;background:#fff;margin-top:25px;border-left:4px solid #47bf75}.parent-details h3{font-size:22px;letter-spacing:-.02em;margin:0 0 10px}.parent-details p{font-size:13px;line-height:1.75;color:#6c6570;margin:0}
+.form-split{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-split select{width:100%;min-width:0;padding:12px;border:1px solid #ddd3df;background:#fff}.minor-check{display:flex!important;align-items:center;gap:10px}.minor-check input{width:18px;height:18px}.contact #guardian-fields{display:grid;gap:13px;background:#f7f2f8;padding:15px}.contact #guardian-fields[hidden]{display:none!important}.privacy-note{font-size:12px;line-height:1.5;color:#6c6470}.contact-backups{display:flex;flex-direction:column;gap:5px;margin:18px 0;font-size:13px}.contact-backups a{text-decoration:underline;overflow-wrap:anywhere}.contact-backups small{font-size:11px;max-width:390px}.anchor-marker{position:relative;top:-110px}
+@media(max-width:760px){.parent-details,.form-split{grid-template-columns:1fr}}
