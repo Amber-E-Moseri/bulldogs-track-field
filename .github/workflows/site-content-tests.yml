@@ -1,0 +1,23 @@
+name: Bulldogs site content tests
+on:
+  push:
+    branches:
+      - content/sean-programs-natural-copy
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  verify-site-content:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: node --check app.js
+      - name: Check programs, photo references, and required image files
+        run: node --test tests/*.test.cjs

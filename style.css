@@ -9,3 +9,41 @@
 @media(max-width:760px){.topline{font-size:8px}.nav{height:76px}.brand{font-size:22px}.brand img{width:43px;height:50px}.nav-cta{display:none}.mobile-menu{display:block}.navlinks{display:none;position:absolute;top:76px;left:0;right:0;background:white;padding:22px 6%;box-shadow:0 15px 25px #0002;flex-direction:column;align-items:start}.navlinks.show{display:flex}.hero{display:flex;flex-direction:column}.hero-copy{padding:55px 6% 35px}.hero h1{font-size:clamp(72px,15vw,110px);margin:27px 0 15px}.hero-photo{min-height:440px}.stats{padding:17px 5%;gap:10px}.stats strong{font-size:44px}.stats span{font-size:8px}.stats>div{gap:8px}.about-grid,.contact{grid-template-columns:1fr}.about-image>img{height:400px}.program-grid{grid-template-columns:1fr}.program-card{min-height:245px}.program-card h3{margin-top:28px}.manifesto p{font-size:clamp(62px,11vw,95px)}.gallery-grid{grid-template-columns:1fr}.gallery-tile img{height:300px}.contact form{padding-top:0}.programs-header,.gallery-head{align-items:start;flex-direction:column}.contact h2{font-size:80px}footer{flex-wrap:wrap}#admin-app{display:block}.admin-sidebar{min-height:0;padding:14px 18px}.admin-brand{display:none}.admin-nav{margin:0;display:flex;flex-direction:row;overflow:auto}.admin-nav button{white-space:nowrap;padding:12px}.sidebar-bottom{display:none}.admin-content{padding:26px 5% 60px}.admin-grid{grid-template-columns:1fr 1fr}.admin-top h1{font-size:38px}.media-edit{grid-template-columns:1fr}.columns-2{grid-template-columns:1fr}}
 @media(max-width:450px){.topline span:last-child{display:none}.hero h1{font-size:72px}.hero-actions{gap:14px}.hero-photo{min-height:350px}.section-tag{font-size:8px;letter-spacing:1px}.about-copy h2,.programs h2,.gallery-section h2,.contact h2{font-size:63px}.manifesto p{font-size:59px}.manifesto-bottom{font-size:7px}.admin-grid{grid-template-columns:1fr}.admin-top{align-items:start;flex-direction:column}.admin-preview h3{font-size:48px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* Training program distinctions and age groups */
+.program-card .program-type{align-self:flex-start;margin-top:18px;padding:6px 11px;border-radius:20px;background:#dcf4df;color:#165c34;font-size:11px;font-weight:800;letter-spacing:.3px}
+.program-card .program-type.noncompetitive{background:#dcecfb;color:#194c7b}
+.program-card:first-child .program-type{background:#ffffffde;color:#194e30}
+.program-card h3{margin:24px 0 16px;font-size:clamp(32px,3vw,43px)}
+.program-card .training-groups{margin:0 0 24px;font-size:12px}
+.program-card .training-groups strong{font-size:10px;letter-spacing:1px}
+.program-card .training-groups ul{margin:10px 0 0;padding-left:18px;line-height:1.9}
+.program-card{min-height:425px}
+.program-card .symbol{display:none}
+
+/* Real photography: intentionally contained, no AI/stock fallback */
+.program-photo{height:156px;overflow:hidden;margin:0 0 16px;background:#e5e1e8}
+.program-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.program-card .program-photo{margin-top:0}
+.program-card:first-child .program-photo{background:#27573d}
+.hero-photo img,.about-image img,.gallery-tile img{object-fit:cover}
+.missing-real-photo{visibility:hidden}
+.photo-not-loaded{background:#33263f!important}
+.photo-not-loaded:after{content:'BULLDOGS TRACK & FIELD';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#e9e2ef;font-size:12px;letter-spacing:2px;font-weight:800;text-align:center;padding:14px;pointer-events:none}
+.program-photo.photo-not-loaded{position:relative}
+
+/* Authenticated Bulldogs content editor */
+#admin-app.locked>.admin-sidebar,#admin-app.locked>.admin-content{display:none!important}
+.auth-wall{min-height:100vh;display:grid;place-items:center;background:#20152b;padding:30px 18px}
+.auth-wall[hidden]{display:none!important}
+.auth-card{width:min(440px,100%);padding:34px;background:#fff;border-radius:12px;color:#281e31;box-shadow:0 25px 80px #0004}
+.auth-card>img{width:90px;height:90px;object-fit:contain;display:block;margin-bottom:14px}
+.auth-card h2{font:900 32px/1.1 var(--display);margin:0 0 10px}
+.auth-card p{font-size:13px;line-height:1.6;color:#61596a}
+.auth-card label{display:block;font-size:12px;font-weight:700;margin:15px 0}
+.auth-card input{display:block;width:100%;margin:7px 0;padding:12px;border:1px solid #d6cedc;border-radius:5px;font:inherit}
+.auth-card .admin-primary{width:100%;margin-top:10px}
+.auth-card>a{display:inline-block;margin-top:15px;font-size:12px;color:#4e3871}
+.admin-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#save-state{font-size:12px;color:#6c6075}
+@media(max-width:650px){.auth-card{padding:24px}.admin-actions{justify-content:flex-start}}
