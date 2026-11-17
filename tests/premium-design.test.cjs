@@ -54,3 +54,12 @@ test('guardian fields are legible and accurately required for minors',()=>{
  assert.match(app,/form\.reset\(\);updateGuardianFields\(\)/);
  assert.match(app,/requireBackend\(\)\.submitInquiry\(payload\)/);
 });
+
+test('admin image processing preserves transparent logos and declared WebP storage type',()=>{
+ assert.match(app,/canvas\.toDataURL\('image\/webp',\.82\)/);
+ assert.doesNotMatch(app,/canvas\.toDataURL\('image\/jpeg'/);
+});
+test('multi-card gallery navigation is based on actual tile positions',()=>{
+ assert.match(app,/tiles\[galleryIndex\]\.offsetLeft-tiles\[0\]\.offsetLeft/);
+ assert.match(css,/flex:0 0 min\(48%,420px\)/);
+});
