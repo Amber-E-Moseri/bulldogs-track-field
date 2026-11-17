@@ -18,6 +18,8 @@ jobs:
         with:
           node-version: '22'
       - name: Check JavaScript syntax
-        run: node --check app.js
-      - name: Check programs, photo references, and required image files
+        run: |
+          node --check app.js
+          node --check bulldogs-backend.js
+      - name: Check content, admin authorization, and image uploads
         run: node --test tests/*.test.cjs
