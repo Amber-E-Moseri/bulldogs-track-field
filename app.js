@@ -86,7 +86,11 @@ function renderSite(){
  $('#hero-headline').innerHTML=htmlTitle(state.hero.headline);$('#hero-description').textContent=state.hero.description;
  $('#about-heading').innerHTML=htmlTitle(state.about.heading);$('#about-text').textContent=state.about.text;$('#coach-quote').textContent='“'+state.about.quote+'”';
  $$('.brand span').forEach(el=>{el.innerHTML=esc(state.brand.name)+'<small>'+esc(state.brand.sub)+'</small>'});
- $$('[data-media]').forEach(el=>{const key=el.dataset.media;el.src=key==='logo'?state.brand.logo:state.media[key]});
+ $('[data-media]').forEach(el=>{const key=el.dataset.media;el.src=key==='logo'?state.brand.logo:state.media[key]});
+ const crest=String(state.brand.logo||'');
+ if(/^(https:\/\/[^"'\\<>]+|assets\/[A-Za-z0-9._/-]+)$/.test(crest)){
+  $('#public-site').style.setProperty('--bulldogs-crest','url("'+crest+'")');
+ }
  $('#instagram-link').href=/^https:\/\//.test(state.brand.instagram)?state.brand.instagram:'https://www.instagram.com/bulldogs.trackandfield/';
  $('#stat-row').innerHTML=state.stats.map(s=>`<div><strong>${esc(s.value)}</strong><span>${nl(s.label)}</span></div>`).join('');
  $('#program-grid').innerHTML=state.programs.map((p,i)=>`<article class="program-card"><span class="number">${String(i+1).padStart(2,'0')} / ${i===0?'DISTANCE':'TRAINING'}</span><span class="program-type ${p.type==='Non-competitive'?'noncompetitive':''}">${esc(p.type||'Competitive')}</span><h3>${nl(p.title)}</h3>${i===0?'':`<div class="program-photo"><img loading="lazy" src="${esc(p.image||'')}" alt="${esc(p.title.replace(/\\n/g,' '))} training photograph"></div>`}<p>${esc(p.description)}</p><div class="training-groups"><strong>TRAINING GROUPS</strong><ul>${(Array.isArray(p.groups)?p.groups:[]).map(group=>`<li>${esc(group)}</li>`).join('')}</ul></div><button class="program-ask" type="button" data-ask-program="${esc(p.title.replace(/\\n/g,' '))}">Ask about this program</button><div class="card-bottom"><span>${esc(p.subtitle||'ATHLETE DEVELOPMENT')}</span></div></article>`).join('');
