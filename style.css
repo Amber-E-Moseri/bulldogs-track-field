@@ -138,3 +138,9 @@ section[id]{scroll-margin-top:90px}
  .media-edit img{width:min(100%,260px);max-width:none;height:175px}
  .admin-actions .admin-secondary,.admin-actions .admin-preview-link{font-size:11px}
 }
+
+/* Transparent original Bulldogs crest: no artificial grey/white tile. */
+.brand img[data-media=logo],.admin-brand img[data-media=logo],.auth-card>img{
+ background:transparent!important;box-shadow:none!important;border:0!important;
+ border-radius:0!important;padding:0!important;mix-blend-mode:normal!important;
+}
