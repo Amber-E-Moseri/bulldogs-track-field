@@ -121,3 +121,17 @@ test('navigation anchors scroll to sections, and coach/cross-country images avoi
  assert.match(css,/\.program-card:first-child \.program-photo img\{object-fit:contain!important/);
  assert.match(css,/\.hero-photo:after\{/);
 });
+
+test('admin shell stays hidden on the public page',()=>{
+ assert.match(html,/<section id="admin-app" hidden/);
+ assert.match(css,/\[hidden\]\{display:none!important\}/);
+ assert.match(css,/#admin-app\[hidden\]/);
+ assert.match(css,/#admin-app\.locked>\.auth-wall\{display:grid/);
+});
+test('studio navigation, admin content, and image previews have responsive layouts',()=>{
+ assert.match(css,/\.admin-sidebar\{position:sticky/);
+ assert.match(css,/\.admin-grid\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+ assert.match(css,/@media\(max-width:900px\)/);
+ assert.match(css,/@media\(max-width:560px\)/);
+ assert.match(css,/\.brand img\[data-media=logo\]/);
+});
