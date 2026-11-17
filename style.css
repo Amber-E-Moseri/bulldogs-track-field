@@ -158,3 +158,19 @@ section[id]{scroll-margin-top:90px}
 /* Bulldogs signature motto: prominent statement, readable supporting line */
 .manifesto .manifesto-motto{font-family:inherit;font-size:clamp(19px,2.4vw,34px);font-weight:800;line-height:1.35;letter-spacing:.015em;margin:0 auto 42px;max-width:800px;color:#fff}
 @media(max-width:560px){.manifesto .manifesto-motto{font-size:19px;padding:0 10px;line-height:1.5}}
+
+/* Resilient baseline: keep premium program cards readable even if the
+   optional premium.css is slow to load or a previous stylesheet is cached. */
+#public-site .program-card:first-child{background:#2b1936;color:#fff;border-top-color:#2b1936}
+#public-site .program-card:first-child p{color:#efe4f2}
+#public-site .program-card .program-facts,#public-site .program-card .program-price{display:none!important}
+#public-site .program-card .training-groups ul{display:flex;flex-wrap:wrap;gap:7px;padding:0;margin:10px 0 14px;list-style:none;line-height:1.25}
+#public-site .program-card .training-groups li{border:1px solid #a88eac50;border-radius:999px;padding:7px 10px;line-height:1.35}
+#public-site .program-card:first-child .training-groups li{border-color:#ffffff80}
+#public-site .program-card .program-ask{display:inline-flex;justify-content:center;align-items:center;align-self:flex-start;width:auto!important;max-width:100%;background:#35203f;color:#fff;border:0;border-radius:999px;padding:12px 19px;font:700 11px/1.3 var(--font);letter-spacing:.04em}
+#public-site .program-card:first-child .program-ask{background:#79d89d;color:#1c2f23}
+#public-site .program-card .program-photo,#public-site .gallery-tile,#public-site .hero-photo,#public-site .about-image{isolation:isolate;position:relative}
+#public-site .program-card .program-photo::after,#public-site .gallery-tile::after,#public-site .hero-photo::before,#public-site .about-image::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(135deg,rgba(65,30,80,.22),transparent 55%,rgba(27,14,35,.28))}
+#public-site .contact #guardian-fields{background:#352641;border:1px solid #d7c5df66}
+#public-site .contact #guardian-fields label{color:#fff}
+#public-site .contact #guardian-fields input{color:#fff;background:#ffffff0c;border-color:#ffffff90}
