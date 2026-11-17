@@ -193,3 +193,31 @@
  #public-site .stats>div{min-height:78px;padding:13px 17px}
  #public-site .stats>div:last-child{grid-column:auto!important}
 }
+
+/* Contact: balanced two-column hierarchy and direct details on the left. */
+#public-site .contact{grid-template-columns:minmax(0,.85fr) minmax(0,1fr);column-gap:clamp(30px,5vw,88px);align-items:start}
+#public-site .contact>div:first-child{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+#public-site .contact>div:first-child h2{max-width:660px;margin:18px 0 0;line-height:.91}
+#public-site .contact-direct{margin-top:clamp(34px,4.5vw,66px);width:min(100%,480px);border-top:1px solid #ffffff3c;padding-top:22px}
+#public-site .contact-direct-heading{margin:0 0 8px;color:#90dcad;font-size:11px;font-weight:850;letter-spacing:.17em}
+#public-site .contact-method{display:flex;flex-direction:column;gap:5px;padding:18px 0;border-bottom:1px solid #ffffff24;transition:padding-left .2s ease,background .2s ease}
+#public-site .contact-method:hover{padding-left:7px}
+#public-site .contact-method-label{color:#bfabc6;font-size:10px;letter-spacing:.15em;font-weight:800}
+#public-site .contact-method-value{font-size:clamp(13px,1.3vw,16px);font-weight:650;color:#fff;overflow-wrap:anywhere;line-height:1.4;letter-spacing:0}
+#public-site .contact-direct-note{font-size:12px;line-height:1.6;margin:20px 0 0;color:#d2c2d6}
+#public-site .contact #instagram-link{display:flex;border:0;margin:0;padding:18px 0}
+#public-site .contact #instagram-link:hover{padding-left:7px}
+#public-site .contact form{min-width:0;margin:0}
+#public-site .contact .form-title{padding-bottom:16px;margin-bottom:24px}
+#public-site .contact .form-split{gap:14px 18px}
+#public-site .contact .form-split label{min-width:0}
+#public-site .contact .privacy-note{margin:17px 0}
+#public-site .contact .form-note:empty{display:none}
+@media(max-width:760px){
+ #public-site .contact{grid-template-columns:1fr;gap:28px}
+ #public-site .contact>div:first-child h2{margin:17px 0 0}
+ #public-site .contact-direct{margin-top:27px;padding-top:17px;width:100%}
+ #public-site .contact-method{padding:13px 0}
+ #public-site .contact #instagram-link{padding:13px 0}
+ #public-site .contact form{margin:0}
+}
