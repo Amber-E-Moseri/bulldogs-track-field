@@ -58,3 +58,19 @@ test('photo files exist before this branch is released', () => {
   const missing = Array.from(expected).filter(file => !fs.existsSync(path.join(root, file)));
   assert.deepEqual(missing, [], 'Upload the optimized photo files in assets/ before merging this PR');
 });
+
+test('admin offers replacement controls for every photo placement', () => {
+  assert.match(app, /data-upload="\$\{key\}"/);
+  assert.match(app, /data-program-upload="\$\{esc\(p\.id\)\}"/);
+  assert.match(app, /data-gallery-upload="\$\{esc\(g\.id\)\}"/);
+  assert.match(app, /data-reset-program-photo/);
+  assert.match(app, /data-media-reset/);
+  assert.match(app, /Program photo saved locally/);
+  assert.match(app, /Gallery image saved/);
+});
+test('uploaded photos have input validation and error-state recovery', () => {
+  assert.match(app, /image\/png,image\/jpeg,image\/webp/);
+  assert.match(app, /15\*1024\*1024/);
+  assert.match(app, /addEventListener\('load'/);
+  assert.match(app, /remove\('photo-not-loaded'\)/);
+});
