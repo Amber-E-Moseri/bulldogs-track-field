@@ -235,3 +235,64 @@
  #public-site .gallery-grid .gallery-tile{flex:0 0 86%;width:86%;max-width:none;min-height:285px}
  #public-site .faq-grid{grid-template-columns:1fr}
 }
+
+/* Compact program cards: remove artificial equal-height stretch and dead space.
+   Each card hugs its content while preserving a consistent image and readable CTA. */
+#public-site .program-grid{
+  align-items:start;
+  grid-auto-rows:max-content;
+  gap:18px;
+}
+#public-site .program-card{
+  min-height:0!important;
+  height:auto;
+  display:flex;
+  flex-direction:column;
+  padding:24px 24px 22px;
+  gap:0;
+}
+#public-site .program-card .number{
+  font-size:clamp(20px,2.1vw,29px);
+}
+#public-site .program-card h3{
+  margin:15px 0 12px;
+  line-height:.93;
+}
+#public-site .program-card:first-child h3{
+  margin:22px 0 17px;
+}
+#public-site .program-card .program-photo{
+  height:155px;
+  margin:0 0 14px;
+}
+#public-site .program-card>p{
+  min-height:0!important;
+  margin:0 0 16px;
+  line-height:1.65;
+  flex:none;
+}
+#public-site .program-card .training-groups{
+  margin:0 0 12px;
+}
+#public-site .program-card .training-groups ul{
+  margin:9px 0 0;
+}
+#public-site .program-card .program-ask{
+  margin:8px 0 16px;
+  min-height:39px;
+}
+#public-site .program-card .card-bottom{
+  margin-top:0!important;
+  padding-top:13px;
+}
+#public-site .program-card:first-child::before{
+  bottom:15%;
+  font-size:clamp(36px,4vw,72px);
+}
+@media(max-width:760px){
+  #public-site .program-grid{gap:14px}
+  #public-site .program-card{padding:23px 21px 20px}
+  #public-site .program-card h3{margin:13px 0}
+  #public-site .program-card:first-child h3{margin:18px 0 16px}
+  #public-site .program-card .program-photo{height:180px}
+}
