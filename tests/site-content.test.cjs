@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '..');
 const app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'style.css'), 'utf8');
-const match = app.match(/const initial=(\{[\s\S]*?\});\s*let state;/);
+const match = app.match(/const initial=(\{[\s\S]*?\});\s*let state(?:[;=])/);
 assert.ok(match, 'Initial content should be readable for validation');
 const initial = vm.runInNewContext('(' + match[1] + ')');
 
