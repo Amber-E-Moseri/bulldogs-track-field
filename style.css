@@ -31,3 +31,19 @@
 .photo-not-loaded{background:#33263f!important}
 .photo-not-loaded:after{content:'BULLDOGS TRACK & FIELD';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#e9e2ef;font-size:12px;letter-spacing:2px;font-weight:800;text-align:center;padding:14px;pointer-events:none}
 .program-photo.photo-not-loaded{position:relative}
+
+/* Authenticated Bulldogs content editor */
+#admin-app.locked>.admin-sidebar,#admin-app.locked>.admin-content{display:none!important}
+.auth-wall{min-height:100vh;display:grid;place-items:center;background:#20152b;padding:30px 18px}
+.auth-wall[hidden]{display:none!important}
+.auth-card{width:min(440px,100%);padding:34px;background:#fff;border-radius:12px;color:#281e31;box-shadow:0 25px 80px #0004}
+.auth-card>img{width:90px;height:90px;object-fit:contain;display:block;margin-bottom:14px}
+.auth-card h2{font:900 32px/1.1 var(--display);margin:0 0 10px}
+.auth-card p{font-size:13px;line-height:1.6;color:#61596a}
+.auth-card label{display:block;font-size:12px;font-weight:700;margin:15px 0}
+.auth-card input{display:block;width:100%;margin:7px 0;padding:12px;border:1px solid #d6cedc;border-radius:5px;font:inherit}
+.auth-card .admin-primary{width:100%;margin-top:10px}
+.auth-card>a{display:inline-block;margin-top:15px;font-size:12px;color:#4e3871}
+.admin-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#save-state{font-size:12px;color:#6c6075}
+@media(max-width:650px){.auth-card{padding:24px}.admin-actions{justify-content:flex-start}}
