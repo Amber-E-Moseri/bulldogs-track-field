@@ -96,7 +96,8 @@ function renderSite(){
  $('#gallery-grid').innerHTML=galleryItems.map((g,i)=>`<button class="gallery-tile" data-lightbox="${g.originalIndex}" aria-label="View ${esc(g.caption)}" tabindex="${i===galleryIndex?'0':'-1'}"><img loading="lazy" src="${esc(g.image)}" alt="${esc(g.caption)}"><span class="caption">${String(i+1).padStart(2,'0')} / ${esc(g.caption)}</span></button>`).join('');
  const count=galleryItems.length;galleryIndex=Math.min(galleryIndex,Math.max(0,count-1));
  $('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=count===0||galleryIndex===count-1;$('#gallery-position').textContent=count?`${galleryIndex+1} / ${count}`:'0 / 0';
- $('#gallery-grid').scrollTo({left:galleryIndex*$('#gallery-grid').clientWidth,behavior:'auto'});
+ const galleryStrip=$('#gallery-grid'),galleryTiles=galleryStrip.querySelectorAll('.gallery-tile');
+ if(galleryTiles.length)galleryStrip.scrollTo({left:galleryTiles[galleryIndex].offsetLeft-galleryTiles[0].offsetLeft,behavior:'auto'});
  applyImageFallbacks();
 }
 function textField(label,section,key,rows=0){const value=state[section][key];const control=rows?`<textarea data-section="${section}" data-field="${key}">${esc(value)}</textarea>`:`<input data-section="${section}" data-field="${key}" value="${esc(value)}">`;return `<label class="field">${label}${control}</label>`}
@@ -191,15 +192,16 @@ $('#contact-form').addEventListener('submit',async e=>{
 function setGalleryIndex(next){
  const count=publicGalleryItems().length;
  galleryIndex=Math.max(0,Math.min(next,count-1));
- const strip=$('#gallery-grid');strip.scrollTo({left:galleryIndex*strip.clientWidth,behavior:'smooth'});
+ const strip=$('#gallery-grid'),tiles=strip.querySelectorAll('.gallery-tile');
+ if(tiles.length)strip.scrollTo({left:tiles[galleryIndex].offsetLeft-tiles[0].offsetLeft,behavior:'smooth'});
  $('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=galleryIndex>=count-1;
  $('#gallery-position').textContent=count?`${galleryIndex+1} / ${count}`:'0 / 0';
 }
 $('#gallery-prev').addEventListener('click',()=>setGalleryIndex(galleryIndex-1));
 $('#gallery-next').addEventListener('click',()=>setGalleryIndex(galleryIndex+1));
 $('#gallery-grid').addEventListener('scroll',()=>{
- const w=$('#gallery-grid').clientWidth;if(!w)return;
- const next=Math.round($('#gallery-grid').scrollLeft/w);
+ const strip=$('#gallery-grid'),tiles=Array.from(strip.querySelectorAll('.gallery-tile'));if(!tiles.length)return;
+ const next=tiles.reduce((best,tile,index)=>Math.abs(tile.offsetLeft-tiles[0].offsetLeft-strip.scrollLeft)<Math.abs(tiles[best].offsetLeft-tiles[0].offsetLeft-strip.scrollLeft)?index:best,0);
  if(next!==galleryIndex){const count=publicGalleryItems().length;galleryIndex=Math.min(next,Math.max(0,count-1));$('#gallery-position').textContent=count?`${galleryIndex+1} / ${count}`:'0 / 0';$('#gallery-prev').disabled=galleryIndex===0;$('#gallery-next').disabled=galleryIndex>=count-1}
 },{passive:true});
 $('#gallery-grid').addEventListener('click',e=>{const el=e.target.closest('[data-lightbox]');if(!el)return;const g=state.gallery[+el.dataset.lightbox];if(!g)return;$('#lightbox-img').src=g.image;$('#lightbox-img').alt=g.caption;$('#lightbox').hidden=false;$('#close-lightbox').focus()});
