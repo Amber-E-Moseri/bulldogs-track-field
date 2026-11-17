@@ -37,7 +37,7 @@ async function submitInquiry(input){
  const event=String(input?.event||'').trim();
  const message=String(input?.message||'').trim();
  if(name.length<1||name.length>100)throw Error('Please enter your name (up to 100 characters).');
- if(email.length<3||email.length>180||!/^\\S+@\\S+\\.\\S+$/.test(email))throw Error('Please enter a valid email address.');
+ if(email.length<3||email.length>180||!/^\S+@\S+\.\S+$/.test(email))throw Error('Please enter a valid email address.');
  if(event.length>120)throw Error('Event name is too long.');
  if(message.length<1||message.length>2500)throw Error('Please include your training goals (up to 2500 characters).');
  // Public insert with no SELECT or RETURNING. RLS prevents reading inquiries.
