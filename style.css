@@ -72,3 +72,69 @@
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 section[id]{scroll-margin-top:90px}
 @media(max-width:760px){.gallery-tile{aspect-ratio:4/5;min-height:240px}.about-image>img{height:auto;max-height:530px}.gallery-controls>span{font-size:9px}}
+
+/* Admin studio repair — hidden surfaces must never leak into the public page */
+[hidden]{display:none!important}
+#admin-app[hidden],#public-site[hidden],#auth-wall[hidden],#lightbox[hidden]{display:none!important}
+#admin-app{grid-template-columns:minmax(225px,250px) minmax(0,1fr);align-items:stretch;min-height:100svh}
+#admin-app:not(.locked)>.auth-wall{display:none!important}
+#admin-app.locked{display:block!important;background:#20152b}
+#admin-app.locked>.auth-wall{display:grid;min-height:100svh}
+.admin-sidebar{position:sticky;top:0;height:100svh;min-height:0;overflow-y:auto;background:linear-gradient(180deg,#24162e,#1b1125);padding:28px 18px}
+.admin-brand{display:flex;align-items:center;gap:12px;font-size:23px;line-height:1.05;min-width:0}
+.admin-brand span{min-width:0}
+.admin-brand small{font-size:9px;letter-spacing:1.3px;line-height:1.5}
+.admin-nav{margin-top:36px;gap:5px}
+.admin-nav button{font:700 12px/1.4 var(--font);border-radius:9px;cursor:pointer;min-height:45px;padding:12px 13px}
+.admin-nav button.active{background:#16854d;color:#fff}
+.admin-content{min-width:0;width:100%;max-width:1420px;margin:0 auto;padding:38px clamp(22px,3.5vw,62px) 64px}
+.admin-top{align-items:flex-start;flex-wrap:wrap;row-gap:12px}
+.admin-top h1{font-size:clamp(32px,3.5vw,48px);overflow-wrap:anywhere}
+.admin-actions{justify-content:flex-end;max-width:100%;gap:9px}
+.admin-actions>*{flex-shrink:0}
+.admin-panel,.edit-panel,.item-row{min-width:0}
+#admin-panel{min-width:0}
+.admin-card,.edit-panel,.item-row{border-radius:12px;box-shadow:0 5px 22px rgba(32,20,46,.035)}
+.admin-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.admin-card .big{font-size:clamp(35px,4vw,54px)}
+.admin-preview{overflow:hidden;border-radius:9px}
+.media-edit{grid-template-columns:minmax(120px,180px) minmax(0,1fr);gap:18px}
+.media-edit img{width:100%;max-width:180px;height:128px;border-radius:8px}
+.media-edit input[type=file]{width:100%;font-size:12px;overflow-wrap:anywhere}
+.admin-brand img{width:48px;height:54px;object-fit:contain}
+.auth-card{overflow:hidden}
+.auth-card img{background:transparent}
+.auth-wall{grid-column:1/-1}
+/* Eliminate the apparent grey logo tile by putting it on a deliberate neutral badge.
+   An actual alpha cutout can be uploaded later through Images & logo. */
+.brand img[data-media=logo],.admin-brand img[data-media=logo],.auth-card>img{
+ background:#fff;
+ border-radius:10px;
+ padding:4px;
+ mix-blend-mode:normal!important;
+ box-shadow:0 1px 8px rgba(24,16,34,.08);
+}
+.admin-brand img[data-media=logo]{background:#fff}
+@media(max-width:900px){
+ #admin-app:not(.locked){display:block}
+ .admin-sidebar{position:relative;top:auto;height:auto;min-height:0;overflow:visible;padding:16px 18px}
+ .admin-brand{display:flex;margin-bottom:12px;font-size:20px}
+ .admin-nav{display:flex;flex-direction:row;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;margin:0;padding:5px 0 8px}
+ .admin-nav::-webkit-scrollbar{display:none}
+ .admin-nav button{flex:none;white-space:nowrap;scroll-snap-align:start}
+ .sidebar-bottom{display:none}
+ .admin-content{padding:22px 5% 54px}
+ .admin-top{align-items:flex-start;flex-direction:column}
+ .admin-actions{justify-content:flex-start;flex-wrap:wrap}
+ .admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+ .admin-grid{grid-template-columns:minmax(0,1fr)}
+ .admin-brand{font-size:19px}
+ .admin-nav button{font-size:11px;padding:10px}
+ .admin-content{padding:20px 16px 45px}
+ .admin-top h1{font-size:34px}
+ .media-edit{grid-template-columns:minmax(0,1fr)}
+ .media-edit img{width:min(100%,260px);max-width:none;height:175px}
+ .admin-actions .admin-secondary,.admin-actions .admin-preview-link{font-size:11px}
+}
