@@ -153,9 +153,12 @@ $('#contact-form').addEventListener('submit',async e=>{
  if((program==='Open Training'&&ageGroup==='College / Open')||(program!=='Open Training'&&ageGroup==='Adult / Open')){note.textContent='Please select a training group offered for your chosen program.';return}
  if(under18&&(!guardianName||!guardianEmail)){note.textContent='Parent or guardian name and email are required for athletes under 18.';return}
  const guardianDetails=under18?'\\nParent/guardian: '+guardianName+' ('+guardianEmail+')':'';
- const payload={name:String(data.get('name')||'').trim(),email:String(data.get('email')||'').trim(),event:program+' / '+ageGroup,message:'Program: '+program+'\\nGroup: '+ageGroup+'\\nUnder 18: '+(under18?'Yes':'No')+guardianDetails+'\\nGoals: '+String(data.get('message')||'').trim()};
+ const intent=String(data.get('intent')||'join').trim(),source=String(data.get('source')||'').trim();
+ const selected=state.programs.find(p=>p.title.replace(/\n/g,' ').toLowerCase()===program.toLowerCase());
+ const shownPrice=priceLabel(selected||{});
+ const payload={name:String(data.get('name')||'').trim(),email:String(data.get('email')||'').trim(),event:program+' / '+ageGroup,message:'Program: '+program+'\\nGroup: '+ageGroup+'\\nInterest: '+intent+'\\nSource: '+source+'\\nUnder 18: '+(under18?'Yes':'No')+guardianDetails+'\\nGoals: '+String(data.get('message')||'').trim()+'\\nDisplayed price: '+shownPrice};
  formSubmitting=true;button.disabled=true;note.textContent='Sending your message...';
- try{await requireBackend().submitInquiry(payload);form.reset();note.textContent='Your inquiry was received. Bulldogs will reply using the email you provided.';flash('Inquiry submitted successfully')}
+ try{await requireBackend().submitInquiry(payload);form.reset();note.textContent='Request received. The program currently shows '+shownPrice+'. Sean will confirm final fees, schedule and availability when replying.';flash('Inquiry submitted successfully')}
  catch(error){note.textContent='Could not send your message: '+(error.message||'Please retry.');flash('Unable to submit inquiry')}
  finally{formSubmitting=false;button.disabled=false}
 });
