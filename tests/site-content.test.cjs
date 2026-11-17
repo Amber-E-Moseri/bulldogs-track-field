@@ -65,12 +65,27 @@ test('admin offers replacement controls for every photo placement', () => {
   assert.match(app, /data-gallery-upload="\$\{esc\(g\.id\)\}"/);
   assert.match(app, /data-reset-program-photo/);
   assert.match(app, /data-media-reset/);
-  assert.match(app, /Program photo saved locally/);
-  assert.match(app, /Gallery image saved/);
+  assert.match(app, /Program photo uploaded. Publishing.../);
+  assert.match(app, /Gallery image uploaded. Publishing.../);
 });
 test('uploaded photos have input validation and error-state recovery', () => {
   assert.match(app, /image\/png,image\/jpeg,image\/webp/);
   assert.match(app, /15\*1024\*1024/);
   assert.match(app, /addEventListener\('load'/);
   assert.match(app, /remove\('photo-not-loaded'\)/);
+});
+
+test('Supabase admin wiring is enabled and browser-only writes are removed', () => {
+ const backend=fs.readFileSync(path.join(root, 'bulldogs-backend.js'),'utf8');
+ assert.match(html,/bulldogs-backend\.js/);
+ assert.match(html,/admin-login-form/);
+ assert.match(app,/refreshAdminAuth/);
+ assert.match(app,/loadSiteContent/);
+ assert.match(app,/saveUploadedPhoto/);
+ assert.doesNotMatch(app,/localStorage\.setItem/);
+ assert.match(backend,/bulldogs_content/);
+ assert.match(backend,/bulldogs_admins/);
+ assert.match(backend,/bulldogs-media/);
+ assert.match(backend,/currentAdmin\(\)/);
+ assert.doesNotMatch(backend,/service_role|sb_secret_/);
 });
