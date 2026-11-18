@@ -60,11 +60,9 @@ function showAuthMode(mode){
  const login=document.querySelector('#admin-login-form');
  const request=document.querySelector('#admin-recovery-request-form');
  const reset=document.querySelector('#admin-new-password-form');
- const forgot=document.querySelector('#forgot-password-link');
  if(login)login.hidden=mode!=='login';
  if(request)request.hidden=mode!=='request';
  if(reset)reset.hidden=mode!=='reset';
- if(forgot)forgot.hidden=mode!=='login';
 }
 async function refreshAdminAuth(){
  try{adminAuthorized=await requireBackend().currentAdmin()}catch(e){adminAuthorized=false;const note=document.querySelector('#auth-message');if(note)note.textContent='Connection error: '+e.message}
@@ -239,13 +237,6 @@ $('#admin-login-form').addEventListener('submit',async e=>{
  const msg=$('#auth-message');msg.textContent='Signing in...';
  try{await requireBackend().login(email,password);const authorized=await refreshAdminAuth();msg.textContent=authorized?'Signed in':'This account has not been granted Bulldogs admin access.';if(!authorized)await api.logout();else {f.reset();await loadSiteContent()}}
  catch(error){msg.textContent=error.message||'Unable to sign in'}
-});
-$('#forgot-password-link').addEventListener('click',()=>{
- showAuthMode('request');
- const loginEmail=document.querySelector('#admin-login-form input[name="email"]');
- const requestEmail=document.querySelector('#admin-recovery-request-form input[name="email"]');
- if(loginEmail&&requestEmail)requestEmail.value=loginEmail.value;
- $('#auth-message').textContent='Enter your Bulldogs admin email to request a reset link.';
 });
 document.querySelectorAll('[data-back-to-login]').forEach(button=>button.addEventListener('click',()=>{
  showAuthMode('login');
