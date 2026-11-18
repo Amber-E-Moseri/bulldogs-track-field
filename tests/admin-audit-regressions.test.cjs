@@ -9,6 +9,13 @@ const vm = require('node:vm');
 
 const app = fs.readFileSync(path.join(__dirname, '..', 'app.js'), 'utf8');
 
+test('saves are refused until content loads, checked before the save state changes',()=>{
+  const start=app.indexOf('function persist()'),end=app.indexOf('async function saveUploadedPhoto',start);
+  const body=app.slice(start,end);
+  assert.ok(body.indexOf('if(!adminAuthorized)')<body.indexOf('if(!loadCompleted)'));
+  assert.ok(body.indexOf('if(!loadCompleted)')<body.indexOf("setSaveStatus('Unsaved changes')"));
+});
+
 test('saves are refused until published content has loaded, so a failed load cannot overwrite live content with baseline defaults', () => {
   const persist = app.match(/function persist\(\)\{[\s\S]*?\n\}/);
   assert.ok(persist, 'persist() found');
@@ -45,6 +52,9 @@ test('CSV export neutralises spreadsheet formula injection in every cell', () =>
   assert.equal(csvCell('-cmd'), '"\'-cmd"');
   assert.equal(csvCell('@SUM(A1)'), '"\'@SUM(A1)"');
   assert.equal(csvCell('\t=x'), '"\'\t=x"');
+  assert.equal(csvCell('  @sum'), '"\'  @sum"');
+  assert.equal(csvCell('\t-HYPERLINK'), '"\'\t-HYPERLINK"');
+  assert.equal(csvCell('\n=cmd'), '"\'\n=cmd"');
   assert.equal(csvCell('Jane "JJ" Doe'), '"Jane ""JJ"" Doe"');
   assert.equal(csvCell('parent@example.com'), '"parent@example.com"');
   assert.equal(csvCell(null), '""');
