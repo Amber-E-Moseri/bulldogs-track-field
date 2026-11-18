@@ -8,7 +8,8 @@ const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
 
 test('single stylesheet loads and retains public styling without losing admin styles',()=>{
- assert.match(html,/href="premium\.css"/);
+ assert.match(html,/href="style\.css"/);
+ assert.doesNotMatch(html,/href="premium\.css"/);
  assert.match(css,/#public-site \.nav\.is-scrolled/);
  assert.match(css,/#public-site \.program-card:hover/);
  assert.match(css,/#public-site \.manifesto::before/);
