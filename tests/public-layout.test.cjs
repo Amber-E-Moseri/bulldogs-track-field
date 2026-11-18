@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
+const css = fs.readFileSync(path.join(root,'style.css'),'utf8').replace(/\s*\{\s*/g,'{').replace(/\s*;\s*/g,';').replace(/\s*\}\s*/g,'}');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
 
 test('single stylesheet loads and retains public styling without losing admin styles',()=>{
