@@ -43,6 +43,10 @@
 .auth-card label{display:block;font-size:12px;font-weight:700;margin:15px 0}
 .auth-card input{display:block;width:100%;margin:7px 0;padding:12px;border:1px solid #d6cedc;border-radius:5px;font:inherit}
 .auth-card .admin-primary{width:100%;margin-top:10px}
+.auth-card .auth-text-button{display:inline-block;background:none;border:0;padding:9px 0;color:#4e3871;text-decoration:underline;font:600 13px/1.5 system-ui,sans-serif;cursor:pointer}
+.auth-card .auth-text-button:focus-visible{outline:2px solid #4e3871;outline-offset:3px}
+.auth-card form[hidden],.auth-card button[hidden]{display:none!important}
+
 .auth-card>a{display:inline-block;margin-top:15px;font-size:12px;color:#4e3871}
 .admin-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 #save-state{font-size:12px;color:#6c6075}

@@ -4,6 +4,7 @@ const STORAGE='bulldogs_studio_v3';
 const initial={brand:{name:'BULLDOGS',sub:'TRACK & FIELD CLUB',logo:'https://raw.githubusercontent.com/Amber-E-Moseri/bulldogs-track-field/main/assets/logo-transparent.webp',instagram:'https://www.instagram.com/bulldogs.trackandfield/'},hero:{headline:'BUILT FOR\nTHE NEXT\nLEVEL.',description:'Cross country, sprint training and open training for athletes who want to improve their running and fitness.'},about:{heading:'A COACH WHO\nSEES YOUR\nPOTENTIAL.',text:'Sean Freeman has coached track and field since 2005 and leads the Medicine Hat Bulldogs, a high-performance track and field club. A former Medicine Hat College men’s soccer player and competitive masters athlete in sprints and multi-events, he joined the Rattlers as an indoor-track co-coach in January 2024. Athletics Alberta recognized his Bulldogs coaching work with its 2018 Junior Development Coach of the Year award, presented in June 2019. He also served as a 2019 Team Alberta head coach. Today, he coaches cross country, sprints and open training in Medicine Hat.',quote:'Dare to be different. — Coach Sean Freeman'},media:{hero:'assets/coach-alumni.webp',studio:'assets/coach-finn-medal.webp',team:'assets/championship-podium.webp'},stats:[{value:'2005',label:'TRACK & FIELD\nCOACHING SINCE'},{value:'2018',label:'JUNIOR DEVELOPMENT COACH\n2018 AWARD · PRESENTED 2019'},{value:'2019',label:'TEAM ALBERTA\nHEAD COACH'}],programs:[{id:'p1',title:'CROSS\nCOUNTRY',subtitle:'DISTANCE RUNNING',description:'Distance running with opportunities to train and compete in cross-country meets.',image:'assets/coach-finn-medal.webp',type:'Competitive',groups:['Junior High','High School','College / Open']},{id:'p2',title:'SPRINTS',subtitle:'SPEED & TECHNIQUE',description:'Sprint training focused on speed, technique, acceleration and race performance.',image:'assets/sprints-track.webp',type:'Competitive',groups:['Junior High','High School','College / Open']},{id:'p3',title:'OPEN\nTRAINING',subtitle:'RUNNING & FITNESS',description:'Structured training for people who want to improve their running, fitness and athletic ability without competing.',image:'assets/open-training.webp',type:'Non-competitive',groups:['Junior High','High School','Adult / Open']}],gallery:[{id:'g1',image:'assets/coach-alumni.webp',caption:'SEAN WITH FORMER ATHLETES'},{id:'g2',image:'assets/sprints-track.webp',caption:'SPRINT TRAINING'},{id:'g3',image:'assets/open-training.webp',caption:'ON THE TRACK'},{id:'g4',image:'assets/sprints-action.webp',caption:'TRAINING SESSION'},{id:'g5',image:'assets/championship-podium.webp',caption:'ALBERTA INDOOR CHAMPIONSHIPS'},{id:'g6',image:'assets/coach-finn-medal.webp',caption:'CROSS-COUNTRY MEDAL'},{id:'g7',image:'assets/high-jump.webp',caption:'HIGH JUMP IN ACTION'}],faq:[{"id":"faq1","question":"Does my athlete need experience?","answer":"Ask Sean which training group suits the athlete's current experience and goals."},{"id":"faq2","question":"What should they bring?","answer":"Running shoes, training clothes and water are a good start. Ask about event-specific gear."},{"id":"faq3","question":"What happens in bad weather?","answer":"Confirm the group-specific indoor, rescheduling or cancellation plan."},{"id":"faq4","question":"How are athletes grouped?","answer":"Junior High, High School, College / Open or Adult / Open, depending on the program. Confirm the exact grade and age requirements."},{"id":"faq5","question":"Who coaches, and what are the credentials?","answer":"Sean has coached since 2005 and has provincial recognition. Confirm current credentials, safeguarding and screening directly with the club."},{"id":"faq6","question":"What are the fees?","answer":"Prices appear above once Sean enters them. A $ placeholder means not yet published. Ask what is included, and about meet fees and gear."},{"id":"faq7","question":"Can my athlete try a session first?","answer":"Ask about trial or drop-in availability and associated fees. A free trial is not guaranteed."},{"id":"faq8","question":"Is financial assistance available?","answer":"Check eligibility for KidSport Medicine Hat & Redcliff. Club participation or assistance is not guaranteed."},{"id":"faq9","question":"What is the refund policy?","answer":"Request current cancellation, refund and missed-session terms in writing."},{"id":"faq10","question":"When is the next intake?","answer":"Sean will confirm upcoming registration dates, training times and waitlist availability."}],inquiries:[]};
 let state=structuredClone(initial);
 let adminAuthorized=false, syncTimer=null, saveQueue=Promise.resolve(), loadCompleted=false;
+let authMode='login';
 let inbox=[], inboxError='', galleryIndex=0, formSubmitting=false;
 const api=window.BulldogsAPI;
 function setSaveStatus(value){const el=document.querySelector('#save-state');if(el)el.textContent=value}
@@ -53,14 +54,31 @@ async function loadSiteContent(){
   renderSite();
  }catch(e){console.error('Could not load Bulldogs content',e);const note=document.querySelector('#form-status');if(note)note.textContent='Website content is temporarily unavailable.'}
 }
+function recoveryCallback(){return new URLSearchParams(window.location.search).get('bulldogs_recovery')==='1'}
+function showAuthMode(mode){
+ authMode=mode;
+ const login=document.querySelector('#admin-login-form');
+ const request=document.querySelector('#admin-recovery-request-form');
+ const reset=document.querySelector('#admin-new-password-form');
+ if(login)login.hidden=mode!=='login';
+ if(request)request.hidden=mode!=='request';
+ if(reset)reset.hidden=mode!=='reset';
+}
 async function refreshAdminAuth(){
  try{adminAuthorized=await requireBackend().currentAdmin()}catch(e){adminAuthorized=false;const note=document.querySelector('#auth-message');if(note)note.textContent='Connection error: '+e.message}
+ const recovery=recoveryCallback();
  const wall=document.querySelector('#auth-wall');
  const app=document.querySelector('#admin-app');
- if(wall)wall.hidden=adminAuthorized;
- if(app)app.classList.toggle('locked',!adminAuthorized);
- if(adminAuthorized){adminRender();await refreshInquiries();}
- else if(document.querySelector('#auth-message')?.textContent==='Loading secure admin...')document.querySelector('#auth-message').textContent='Only authorized Bulldogs administrators can sign in.';
+ if(wall)wall.hidden=adminAuthorized&&!recovery;
+ if(app)app.classList.toggle('locked',!adminAuthorized||recovery);
+ if(recovery){
+  showAuthMode(adminAuthorized?'reset':'request');
+  if(!adminAuthorized){const note=document.querySelector('#auth-message');if(note)note.textContent='This recovery link is expired or not authorized for Bulldogs. Request another link if needed.'}
+ }else{
+  showAuthMode(authMode==='request'?'request':'login');
+  if(adminAuthorized){adminRender();await refreshInquiries();}
+  else if(document.querySelector('#auth-message')?.textContent==='Loading secure admin...')document.querySelector('#auth-message').textContent='Only authorized Bulldogs administrators can sign in.';
+ }
  return adminAuthorized;
 }
 let tab='overview';const $=sel=>document.querySelector(sel);const $$=sel=>Array.from(document.querySelectorAll(sel));
@@ -132,7 +150,7 @@ function adminRender(){const panel=$('#admin-panel');$('#tab-title').textContent
  if(tab==='settings'){panel.innerHTML=`<p class="admin-description">Update club identity, create a backup, or restore a saved backup.</p>${editPanel('Club branding',textField('Club name','brand','name')+textField('Brand subtitle','brand','sub')+textField('Instagram URL','brand','instagram'))}${editPanel('Backups',`<p>Export the current content, images, programs, gallery, and inquiries as a JSON backup. Import it to restore edits in another browser.</p><div class="editor-actions"><button id="export-json" class="admin-primary">DOWNLOAD BACKUP JSON ↓</button><label class="admin-secondary" style="cursor:pointer">IMPORT BACKUP JSON <input type="file" id="import-json" accept="application/json,.json" hidden></label></div>`)}${editPanel('Restore website defaults',`<p>Restore the approved Bulldogs website content and current photo assets, programs, FAQs and branding. The website layout stays unchanged. This replaces your published Admin Studio edits for all visitors. Download a backup first if you want to keep them.</p><button id="reset-all" class="admin-danger" type="button">RESTORE WEBSITE DEFAULTS</button>`)}<div class="notice">A JSON backup may include embedded photos and private demo inquiries. Keep it somewhere secure.</div>`}
 }
 function switchView(){
- const isAdmin=location.hash==='#admin'||location.hash.startsWith('#admin/');
+ const isAdmin=recoveryCallback()||location.hash==='#admin'||location.hash.startsWith('#admin/');
  $('#public-site').hidden=isAdmin;$('#admin-app').hidden=!isAdmin;
  if(isAdmin){const requested=location.hash.split('/')[1];if(requested&&titles[requested])tab=requested;refreshAdminAuth();window.scrollTo(0,0)}
  else{
@@ -219,6 +237,53 @@ $('#admin-login-form').addEventListener('submit',async e=>{
  const msg=$('#auth-message');msg.textContent='Signing in...';
  try{await requireBackend().login(email,password);const authorized=await refreshAdminAuth();msg.textContent=authorized?'Signed in':'This account has not been granted Bulldogs admin access.';if(!authorized)await api.logout();else {f.reset();await loadSiteContent()}}
  catch(error){msg.textContent=error.message||'Unable to sign in'}
+});
+document.querySelectorAll('[data-back-to-login]').forEach(button=>button.addEventListener('click',()=>{
+ showAuthMode('login');
+ $('#auth-message').textContent='Sign in with your Bulldogs admin account.';
+}));
+$('#admin-recovery-request-form').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const form=e.currentTarget;
+ const email=String(new FormData(form).get('email')||'').trim();
+ const button=form.querySelector('[type="submit"]');
+ const msg=$('#auth-message');
+ button.disabled=true;msg.textContent='Requesting reset link...';
+ try{
+  // Use the canonical Bulldogs production URL, not arbitrary preview origins.
+  // This exact URL must be allowlisted in the shared Supabase Auth URL Configuration.
+  const callback='https://bulldogs-track-field.vercel.app/?bulldogs_recovery=1';
+  await requireBackend().requestPasswordReset(email,callback);
+  msg.textContent='If this email is eligible, a password reset link will arrive shortly. Check your spam folder too.';
+ }catch(error){msg.textContent='Could not request a reset link. Please try again later.'}
+ finally{button.disabled=false}
+});
+$('#admin-new-password-form').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const form=e.currentTarget;
+ const data=new FormData(form);
+ const password=String(data.get('password')||'');
+ const confirmation=String(data.get('confirm')||'');
+ const msg=$('#auth-message');
+ if(password.length<12){msg.textContent='Use at least 12 characters.';return}
+ if(password!==confirmation){msg.textContent='Passwords do not match.';return}
+ const button=form.querySelector('[type="submit"]');
+ button.disabled=true;msg.textContent='Updating password...';
+ try{
+  if(!recoveryCallback())throw Error('No recovery link is active.');
+  await requireBackend().changeRecoveredPassword(password);
+  form.reset();
+  await requireBackend().logout();
+  adminAuthorized=false;
+  const url=new URL(window.location.href);
+  url.searchParams.delete('bulldogs_recovery');url.hash='admin';
+  window.history.replaceState(null,'',url.pathname+url.search+url.hash);
+  showAuthMode('login');
+  $('#admin-app').classList.add('locked');
+  $('#auth-wall').hidden=false;
+  msg.textContent='Password updated. Sign in with your new password.';
+ }catch(error){msg.textContent=error.message||'Password update failed. Request a new reset link.'}
+ finally{button.disabled=false}
 });
 $('#admin-logout').addEventListener('click',async()=>{await api.logout();adminAuthorized=false;switchView();});
 window.addEventListener('hashchange',switchView);
