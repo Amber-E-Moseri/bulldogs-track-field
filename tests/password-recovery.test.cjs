@@ -11,7 +11,7 @@ const backend=fs.readFileSync(path.join(root,'bulldogs-backend.js'),'utf8');
 const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
 
 test('login includes recovery request and new password forms without exposing signup',()=>{
- assert.match(html,/id="forgot-password-link"/);
+ assert.doesNotMatch(html,/id="forgot-password-link"|Forgot password\?/);
  assert.match(html,/id="admin-recovery-request-form" hidden/);
  assert.match(html,/id="admin-new-password-form" hidden/);
  assert.match(html,/autocomplete="new-password" minlength="12"/);
