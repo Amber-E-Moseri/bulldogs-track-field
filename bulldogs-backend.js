@@ -58,8 +58,21 @@ async function deleteInquiry(id){
  const {error}=await client.from('bulldogs_inquiries').delete().eq('id',id);
  if(error)throw error;return true;
 }
+async function requestPasswordReset(email,redirectTo){
+ const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});
+ if(error)throw error;
+ return true;
+}
+async function changeRecoveredPassword(password){
+ // Protect identities belonging to other apps in this shared Supabase project.
+ if(!(await currentAdmin()))throw Error('This identity is not a Bulldogs administrator.');
+ const {error}=await client.auth.updateUser({password});
+ if(error)throw error;
+ return true;
+}
 window.BulldogsAPI={
  client,session,currentAdmin,getContent,saveContent,uploadPhoto,submitInquiry,listInquiries,deleteInquiry,
+ requestPasswordReset,changeRecoveredPassword,
  login:async(email,password)=>unwrap(await client.auth.signInWithPassword({email,password})),
  logout:async()=>unwrap(await client.auth.signOut())
 };
