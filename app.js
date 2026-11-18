@@ -259,10 +259,10 @@ $('#admin-recovery-request-form').addEventListener('submit',async e=>{
  const msg=$('#auth-message');
  button.disabled=true;msg.textContent='Requesting reset link...';
  try{
-  // Callback origin is intentionally the current Bulldogs site, never another project.
-  const callback=new URL(window.location.href);
-  callback.search='?bulldogs_recovery=1';callback.hash='';
-  await requireBackend().requestPasswordReset(email,callback.toString());
+  // Use the canonical Bulldogs production URL, not arbitrary preview origins.
+  // This exact URL must be allowlisted in the shared Supabase Auth URL Configuration.
+  const callback='https://bulldogs-track-field.vercel.app/?bulldogs_recovery=1';
+  await requireBackend().requestPasswordReset(email,callback);
   msg.textContent='If this email is eligible, a password reset link will arrive shortly. Check your spam folder too.';
  }catch(error){msg.textContent='Could not request a reset link. Please try again later.'}
  finally{button.disabled=false}
