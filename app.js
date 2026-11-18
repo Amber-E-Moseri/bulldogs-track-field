@@ -143,7 +143,7 @@ function switchView(){
   }else if(!section||section==='home')window.scrollTo(0,0);
  }
 }
-function csvCell(value){let text=String(value??'');if(/^[\\t\\r\\n ]*[=+@-]/.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"'}
+function csvCell(value){let text=String(value??'');if(/^[\t\r\n ]*[=+@-]/.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"'}
 function download(name,content,mime='application/json'){const url=URL.createObjectURL(new Blob([content],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
 function loadImage(file,callback){if(!file||!['image/jpeg','image/png','image/webp'].includes(file.type)){flash('Please choose a JPEG, PNG, or WebP image.');return}if(file.size>15*1024*1024){flash('Image is too large (15 MB maximum).');return}const reader=new FileReader();reader.onerror=()=>flash('Could not read photo');reader.onload=()=>{const img=new Image();img.onerror=()=>flash('Could not load the image');img.onload=()=>{const canvas=document.createElement('canvas');const scale=Math.min(1,1300/Math.max(img.width,img.height));canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);callback(canvas.toDataURL('image/webp',.82))};img.src=reader.result};reader.readAsDataURL(file)}
 function setMedia(key,value){const old=key==='logo'?state.brand.logo:state.media[key];if(key==='logo')state.brand.logo=value;else state.media[key]=value;if(!persist()){if(key==='logo')state.brand.logo=old;else state.media[key]=old;return}renderSite();adminRender();flash('Photo uploaded. Publishing...')}
