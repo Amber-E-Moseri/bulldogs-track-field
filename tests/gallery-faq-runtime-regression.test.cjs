@@ -2,7 +2,7 @@
 const test=require('node:test'), assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.join(__dirname,'..');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
-const css=fs.readFileSync(path.join(root,'premium.css'),'utf8');
+const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 test('public renderer updates all brand logos without calling forEach on a single node',()=>{
  assert.match(app,/\$\$\('\[data-media\]'\)\.forEach\(el=>/);
