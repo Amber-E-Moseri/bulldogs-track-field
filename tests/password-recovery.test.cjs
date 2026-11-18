@@ -22,8 +22,8 @@ test('login includes recovery request and new password forms without exposing si
 
 test('recovery request uses Supabase SDK and caller-supplied Bulldogs-only callback',()=>{
  assert.match(backend,/client\.auth\.resetPasswordForEmail\(email,\{redirectTo\}\)/);
- assert.match(app,/callback\.search='\?bulldogs_recovery=1';callback\.hash=''/);
- assert.match(app,/requireBackend\(\)\.requestPasswordReset\(email,callback\.toString\(\)\)/);
+ assert.match(app,/const callback='https:\/\/bulldogs-track-field\.vercel\.app\/\?bulldogs_recovery=1'/);
+ assert.match(app,/requireBackend\(\)\.requestPasswordReset\(email,callback\)/);
  assert.match(app,/If this email is eligible/);
  assert.doesNotMatch(backend,/signUp\(/);
 });
@@ -54,4 +54,13 @@ test('Bulldogs recovery does not add database tables, global auth configuration,
  assert.match(backend,/storageKey:'bulldogs-auth-v1'/);
  assert.doesNotMatch(backend,/service_role|sb_secret_/);
  assert.doesNotMatch(app,/ALTER TABLE|CREATE POLICY|auth\.admin\./i);
+});
+
+test('neutral shared email template uses Supabase official confirmation link',()=>{
+ const template=fs.readFileSync(path.join(root,'auth-templates','password-recovery.html'),'utf8');
+ assert.match(template,/<title>Reset your password<\/title>/);
+ assert.match(template,/href="{{ \.ConfirmationURL }}"/);
+ assert.match(template,/ACCOUNT SECURITY/);
+ assert.doesNotMatch(template,/Bulldogs|Pearl Studio|ambermoseri\.vercel\.app/i);
+ assert.doesNotMatch(template,/{{ \.SiteURL }}/);
 });
