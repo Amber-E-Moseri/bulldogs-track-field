@@ -22,14 +22,14 @@ Website and content studio for **Bulldogs Track & Field**, coached by Sean Freem
 
 ## Stack
 
-Static HTML, CSS, and JavaScript on Vercel, connected to a dedicated Bulldogs area in Supabase:
+Static HTML, a consolidated `style.css`, and JavaScript on Vercel, connected to Bulldogs-specific resources in Supabase:
 
 - **Auth:** Supabase email/password authentication; authorization via `bulldogs_admins`
 - **Published content:** `public.bulldogs_content`
 - **Contact inquiries:** `public.bulldogs_inquiries`
 - **Media uploads:** `bulldogs-media` bucket
 
-The database project also hosts unrelated products. **Do not** modify Pearl Studio or personal portfolio tables, policies, or buckets when working on Bulldogs.
+The Supabase project is shared with other applications. Bulldogs uses its own authorization table, content table, inquiries table and media bucket. Supabase Auth identities and project-level authentication settings are shared across applications and must be treated accordingly.
 
 Only browser-safe Supabase publishable keys belong in frontend code. **Never** commit secret/service-role keys. The database enforces row-level security and read-only inquiry access for authorized Bulldogs admins. Anonymous visitors may **insert** contact inquiries only.
 
@@ -65,7 +65,17 @@ node --check bulldogs-backend.js
 node --test tests/*.test.cjs
 ```
 
-Tests exercise content/photo references and mocked Supabase authentication, reads, writes, and media uploads. Passing mocked tests does **not** replace live-browser verification or production end-to-end checks.
+Tests include content and asset checks, pure-function behavior checks, and mocked Supabase authorization and media workflows. Some legacy coverage is source-level and must not be mistaken for full browser testing. Passing tests does **not** replace authenticated browser verification or production end-to-end checks.
+
+## Architecture and source of truth
+
+- `index.html` — public sections and Admin Studio markup.
+- `style.css` — shared core styles followed by scoped public-site presentation rules; no second override stylesheet is loaded.
+- `app.js` — rendering, form interactions, and admin content editing.
+- `bulldogs-backend.js` — Supabase client and operations.
+- `tests/` — Node.js regression and behavioral tests.
+
+Published copy from `bulldogs_content` takes precedence over the JavaScript defaults. Editing a default in source code does not overwrite an administrator's existing published content. Update published copy explicitly in Admin Studio when approved. Passwords authenticate against project-level Supabase Auth; authorization to Bulldogs is separately checked against `bulldogs_admins`.
 
 ## Deployment
 
