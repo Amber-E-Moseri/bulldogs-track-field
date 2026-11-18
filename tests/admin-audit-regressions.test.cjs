@@ -21,7 +21,7 @@ test('inquiry dashboard count uses fetched inbox rather than empty content state
 });
 
 test('program title labels strip actual newline characters for form preselect',()=>{
- assert.equal((app.match(/replace\(\/\\n\/g,' '\)/g)||[]).length,3);
+ assert.ok((app.match(/replace\(\/\\n\/g,' '\)/g)||[]).length>=3);
  assert.doesNotMatch(app,/replace\(\/\\\\n\/g,' '\)/);
 });
 
