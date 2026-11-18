@@ -1,6 +1,6 @@
 'use strict';const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const base=path.join(__dirname,'..');
-const html=fs.readFileSync(path.join(base,'index.html'),'utf8'),css=fs.readFileSync(path.join(base,'premium.css'),'utf8'),app=fs.readFileSync(path.join(base,'app.js'),'utf8');
+const html=fs.readFileSync(path.join(base,'index.html'),'utf8'),css=fs.readFileSync(path.join(base,'style.css'),'utf8'),app=fs.readFileSync(path.join(base,'app.js'),'utf8');
 test('contact details appear once, near heading and before join form',()=>{
  assert.equal((html.match(/mailto:medicinehatbulldogstrackclub@gmail\.com/g)||[]).length,1);
  assert.equal((html.match(/id="instagram-link"/g)||[]).length,1);
