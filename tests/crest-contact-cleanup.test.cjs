@@ -11,7 +11,7 @@ test('all original default logo references use transparent crest',()=>{
  assert.doesNotMatch(app,/assets\/logo\.webp/);
  assert.doesNotMatch(css,/assets\/logo\.webp/);
  assert.match(html,/data-media="logo" src="assets\/logo-transparent\.webp"/);
- assert.match(app,/logo:'assets\/logo-transparent\.webp'/);
+ assert.match(app,/logo:'https:\/\/raw\.githubusercontent\.com\/Amber-E-Moseri\/bulldogs-track-field\/main\/assets\/logo-transparent\.webp'/);
  assert.match(css,/--bulldogs-crest,url\('assets\/logo-transparent\.webp'\)/);
 });
 test('crest is a genuine WebP image, not an empty placeholder',()=>{
