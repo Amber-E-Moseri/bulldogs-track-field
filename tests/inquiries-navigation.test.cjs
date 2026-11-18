@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const backend = fs.readFileSync(path.join(root, 'bulldogs-backend.js'), 'utf8');
 const app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const css = fs.readFileSync(path.join(root, 'style.css'), 'utf8');
+const css = fs.readFileSync(path.join(root,'style.css'),'utf8').replace(/\s*\{\s*/g,'{').replace(/\s*;\s*/g,';').replace(/\s*\}\s*/g,'}');
 
 function harness({ authorized=true, userId='member-1', fail=null }={}){
  const calls=[];
@@ -117,20 +117,20 @@ test('section three is a carousel with controls and touch scrolling',()=>{
 test('navigation anchors scroll to sections, and coach/cross-country images avoid cropping',()=>{
  assert.match(html,/href="#join-team">WORK WITH SEAN/);
  assert.match(app,/scrollIntoView\(\{behavior:'smooth',block:'start'\}\)/);
- assert.match(css,/\.about-image>img\{object-fit:contain!important/);
- assert.match(css,/\.program-card:first-child \.program-photo img\{object-fit:contain!important/);
+ assert.match(css,/\.about-image>img\{\s*object-fit:contain!important/);
+ assert.match(css,/\.program-card:first-child \.program-photo img\{\s*object-fit:contain!important/);
  assert.match(css,/\.hero-photo:after\{/);
 });
 
 test('admin shell stays hidden on the public page',()=>{
  assert.match(html,/<section id="admin-app" hidden/);
- assert.match(css,/\[hidden\]\{display:none!important\}/);
+ assert.match(css,/\[hidden\]\{\s*display:none!important\}/);
  assert.match(css,/#admin-app\[hidden\]/);
- assert.match(css,/#admin-app\.locked>\.auth-wall\{display:grid/);
+ assert.match(css,/#admin-app\.locked>\.auth-wall\{\s*display:grid/);
 });
 test('studio navigation, admin content, and image previews have responsive layouts',()=>{
- assert.match(css,/\.admin-sidebar\{position:sticky/);
- assert.match(css,/\.admin-grid\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+ assert.match(css,/\.admin-sidebar\{\s*position:sticky/);
+ assert.match(css,/\.admin-grid\{\s*grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
  assert.match(css,/@media\(max-width:900px\)/);
  assert.match(css,/@media\(max-width:560px\)/);
  assert.match(css,/\.brand img\[data-media=logo\]/);
