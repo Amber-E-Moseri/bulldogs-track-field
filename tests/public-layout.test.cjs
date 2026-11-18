@@ -66,7 +66,7 @@ test('multi-card gallery navigation is based on actual tile positions',()=>{
 });
 
 test('consolidated styles prevent the broken green program-card rendering',()=>{
- const fallback=fs.readFileSync(path.join(root,'style.css'),'utf8');
+ const fallback=css;
  assert.match(fallback,/#public-site \.program-card:first-child\{\s*background:#2b1936/);
  assert.match(css,/#public-site \.program-card:first-child\{\s*background:linear-gradient\(155deg,#3b2148/);
  assert.match(fallback,/#public-site \.program-card \.program-facts,#public-site \.program-card \.program-price\{\s*display:none!important\}/);
