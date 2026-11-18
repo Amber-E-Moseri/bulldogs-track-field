@@ -47,7 +47,7 @@ test('gallery omits currently featured images while retaining admin source recor
 test('guardian fields are legible and accurately required for minors',()=>{
  assert.match(html,/id="guardian-fields" hidden aria-label="Parent or guardian contact details"/);
  assert.match(html,/Parent or guardian details are required for athletes under 18/);
- assert.match(css,/#public-site \.contact #guardian-fields\{background:#ffffff0d/);
+ assert.match(css,/#public-site \.contact #guardian-fields\{\s*background:#ffffff0d/);
  assert.match(css,/#public-site \.contact #guardian-fields label\{color:#fff/);
  assert.match(css,/#public-site \.contact #guardian-fields input\{color:#fff/);
  assert.match(app,/function updateGuardianFields\(\)/);
@@ -67,12 +67,12 @@ test('multi-card gallery navigation is based on actual tile positions',()=>{
 
 test('consolidated styles prevent the broken green program-card rendering',()=>{
  const fallback=fs.readFileSync(path.join(root,'style.css'),'utf8');
- assert.match(fallback,/#public-site \.program-card:first-child\{background:#2b1936/);
- assert.match(css,/#public-site \.program-card:first-child\{background:linear-gradient\(155deg,#3b2148/);
- assert.match(fallback,/#public-site \.program-card \.program-facts,#public-site \.program-card \.program-price\{display:none!important\}/);
- assert.match(css,/#public-site \.program-card \.training-groups ul\{display:flex!important/);
- assert.match(css,/#public-site \.program-card \.program-ask\{display:inline-flex/);
- assert.match(css,/#public-site \.program-card:first-child \.program-ask\{background:#74d799!important/);
+ assert.match(fallback,/#public-site \.program-card:first-child\{\s*background:#2b1936/);
+ assert.match(css,/#public-site \.program-card:first-child\{\s*background:linear-gradient\(155deg,#3b2148/);
+ assert.match(fallback,/#public-site \.program-card \.program-facts,#public-site \.program-card \.program-price\{\s*display:none!important\}/);
+ assert.match(css,/#public-site \.program-card \.training-groups ul\{\s*display:flex!important/);
+ assert.match(css,/#public-site \.program-card \.program-ask\{\s*display:inline-flex/);
+ assert.match(css,/#public-site \.program-card:first-child \.program-ask\{\s*background:#74d799!important/);
 });
 test('all four photographic placements receive uniform plum shading',()=>{
  for(const name of ['program-photo','gallery-tile','about-image','hero-photo'])assert.match(css,new RegExp('#public-site \\.'+name));
