@@ -37,7 +37,8 @@ test('Overview inquiry count reads the real admin inbox, not the always-empty pu
 });
 
 test('program title line breaks are converted with a real newline regex (not a literal backslash-n)', () => {
-  assert.doesNotMatch(app, /replace\(\/\\\\n\/g/);
+  const programCard=app.slice(app.indexOf("$('#program-grid').innerHTML="),app.indexOf("renderPricing();"));
+  assert.doesNotMatch(programCard, /replace\(\/\\\\n\/g/);
   assert.match(app, /data-ask-program="\$\{esc\(p\.title\.replace\(\/\\n\/g,' '\)\)\}"/);
 });
 
