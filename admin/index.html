@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#20152b">
+  <title>Bulldogs Admin Studio</title>
+  <style>
+    :root{color-scheme:dark}
+    *{box-sizing:border-box}
+    body{min-height:100svh;margin:0;background:#20152b;color:white;font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;display:grid;place-items:center;padding:24px}
+    main{max-width:440px;text-align:center}
+    h1{font-size:clamp(28px,6vw,38px);letter-spacing:-.04em;line-height:1.1;margin:0 0 12px}
+    p{color:#ddd0e3;margin:0 0 20px}
+    a{display:inline-block;border-radius:999px;background:#7bd89b;color:#1b1921;padding:13px 20px;font-weight:800;text-decoration:none}
+    a:focus-visible{outline:3px solid white;outline-offset:4px}
+  </style>
+  <script>
+    // GitHub Pages serves the site from /bulldogs-track-field/.
+    // Resolve relative to this directory so both project and root deployments work.
+    const siteUrl = new URL('../', window.location.href);
+    siteUrl.hash = 'admin';
+    window.location.replace(siteUrl.href);
+  </script>
+</head>
+<body>
+  <main>
+    <h1>BULLDOGS ADMIN STUDIO</h1>
+    <p>Opening the secure admin sign-in…</p>
+    <a id="admin-login-link" href="../#admin">Open admin sign-in</a>
+  </main>
+</body>
+</html>
