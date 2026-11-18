@@ -98,7 +98,7 @@ test('Join form collects program, age group, and guardian details without persis
  assert.match(app,/submitInquiry\(payload\)/);
  assert.match(html,/mailto:medicinehatbulldogstrackclub@gmail\.com/);
  assert.match(html,/href="#join-team">TRAIN WITH US/);
- assert.match(html,/href="#join-team">START YOUR JOURNEY/);
+ assert.match(html,/href="#join-team">EXPLORE TRAINING/);
 });
 
 test('coach can edit prices without invented initial amounts',()=>{assert.match(html,/id="pricing-grid"/);assert.match(app,/function priceLabel/);assert.match(app,/data-program-field="price"/);assert.match(app,/data-program-field="feeUnit"/);assert.match(app,/return amount\?'\$'/);});

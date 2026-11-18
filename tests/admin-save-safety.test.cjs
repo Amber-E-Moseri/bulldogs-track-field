@@ -1,6 +1,5 @@
 'use strict';
-// Regression tests from the Admin Studio functional audit.
-// Source-level checks plus a behavioural check of the extracted CSV helper.
+// Admin safety invariants and executable CSV export behavior.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');

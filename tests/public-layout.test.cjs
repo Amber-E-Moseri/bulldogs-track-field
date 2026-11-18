@@ -4,21 +4,22 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-const css=fs.readFileSync(path.join(root,'premium.css'),'utf8');
+const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
 
-test('premium styling loads on the public website and leaves admin scoped separately',()=>{
- assert.match(html,/href="premium\.css"/);
+test('single stylesheet loads and retains public styling without losing admin styles',()=>{
+ assert.match(html,/href="style\.css"/);
+ assert.doesNotMatch(html,/href="premium\.css"/);
  assert.match(css,/#public-site \.nav\.is-scrolled/);
  assert.match(css,/#public-site \.program-card:hover/);
  assert.match(css,/#public-site \.manifesto::before/);
  assert.match(css,/#public-site \.scroll-reveal\.is-visible/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
- assert.doesNotMatch(css,/#admin-app/);
+ assert.match(css,/#admin-app/);
 });
 
 test('mobile hero shows copy and primary CTA before photo',()=>{
- assert.match(html,/<div class="hero-copy">[\s\S]*?href="#join-team">START YOUR JOURNEY[\s\S]*?<div class="hero-photo">/);
+ assert.match(html,/<div class="hero-copy">[\s\S]*?href="#join-team">EXPLORE TRAINING[\s\S]*?<div class="hero-photo">/);
  assert.match(css,/#public-site \.hero-copy\{order:0/);
  assert.match(css,/#public-site \.hero-photo\{order:1/);
  assert.match(css,/@media\(max-width:760px\)/);
@@ -64,7 +65,7 @@ test('multi-card gallery navigation is based on actual tile positions',()=>{
  assert.match(css,/flex:0 0 min\(48%,420px\)/);
 });
 
-test('fallback and premium styles prevent the broken green program-card rendering',()=>{
+test('consolidated styles prevent the broken green program-card rendering',()=>{
  const fallback=fs.readFileSync(path.join(root,'style.css'),'utf8');
  assert.match(fallback,/#public-site \.program-card:first-child\{background:#2b1936/);
  assert.match(css,/#public-site \.program-card:first-child\{background:linear-gradient\(155deg,#3b2148/);

@@ -4,9 +4,9 @@ const fs=require('node:fs'),path=require('node:path');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
-const css=fs.readFileSync(path.join(root,'premium.css'),'utf8');
+const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
 const crest=fs.readFileSync(path.join(root,'assets/logo-transparent.webp'));
-test('all original default logo references use transparent crest',()=>{
+test('site uses the approved Bulldogs crest consistently',()=>{
  assert.doesNotMatch(html,/assets\/logo\.webp/);
  assert.doesNotMatch(app,/assets\/logo\.webp/);
  assert.doesNotMatch(css,/assets\/logo\.webp/);

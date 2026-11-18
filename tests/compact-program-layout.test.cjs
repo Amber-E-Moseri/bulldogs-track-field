@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const root=path.join(__dirname,'..'),css=fs.readFileSync(path.join(root,'premium.css'),'utf8'),app=fs.readFileSync(path.join(root,'app.js'),'utf8');
+const root=path.join(__dirname,'..'),css=fs.readFileSync(path.join(root,'style.css'),'utf8'),app=fs.readFileSync(path.join(root,'app.js'),'utf8');
 test('program cards size to their contents instead of stretching to tallest card',()=>{
  assert.match(css,/#public-site \.program-grid\{\s*align-items:start;/);
  assert.match(css,/#public-site \.program-card\{\s*min-height:0!important;/);
