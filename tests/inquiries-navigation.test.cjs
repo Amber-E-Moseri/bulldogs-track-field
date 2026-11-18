@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const backend = fs.readFileSync(path.join(root, 'bulldogs-backend.js'), 'utf8');
 const app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const css = fs.readFileSync(path.join(root, 'style.css'), 'utf8');
+const css = fs.readFileSync(path.join(root,'style.css'),'utf8').replace(/\s*\{\s*/g,'{').replace(/\s*;\s*/g,';').replace(/\s*\}\s*/g,'}');
 
 function harness({ authorized=true, userId='member-1', fail=null }={}){
  const calls=[];
